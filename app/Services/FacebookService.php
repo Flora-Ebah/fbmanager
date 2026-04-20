@@ -81,7 +81,13 @@ class FacebookService
             $response = $this->requestWithRetry($url, $params);
 
             if (!$response || !$response->successful()) {
-                Log::error("Facebook API error (comments for {$postId}): " . ($response ? $response->body() : 'no response'));
+                $errorCode = $response ? $response->json('error.code') : null;
+                // Code 104 = post non accessible (pub, cross-post, etc.) - on skip silencieusement
+                if ($errorCode === 104) {
+                    Log::info("Post {$postId} inaccessible (probablement publicite/cross-post) - ignore");
+                } else {
+                    Log::error("Facebook API error (comments for {$postId}): " . ($response ? $response->body() : 'no response'));
+                }
                 break;
             }
 
