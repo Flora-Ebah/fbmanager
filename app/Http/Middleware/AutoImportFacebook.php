@@ -24,7 +24,7 @@ class AutoImportFacebook
             Log::channel('single')->info('[AUTO-IMPORT] Declenchement import Facebook en arriere-plan');
 
             // Lancer en arriere-plan sans bloquer la requete
-            $php = PHP_BINARY ?: 'php';
+            $php = env('PHP_BINARY_PATH', PHP_BINARY ?: 'php');
             $artisan = base_path('artisan');
 
             if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
