@@ -92,11 +92,11 @@
                     </span>
                 </td>
                 <td class="col-actif">
-                    <span style="color: {{ $u->is_active ? 'var(--vert-ok)' : 'var(--rouge-france)' }}; font-family:'Poppins',sans-serif; font-size:20px;">
+                    <span style="color: {{ $u->is_active ? 'var(--vert-ok)' : 'var(--rouge-france)' }}; font-family:'Outfit',sans-serif; font-size:20px;">
                         {{ $u->is_active ? 'Oui' : 'Non' }}
                     </span>
                 </td>
-                <td class="col-login" style="font-family:'Poppins',sans-serif; font-size:16px; color:#888;">
+                <td class="col-login" style="font-family:'Outfit',sans-serif; font-size:16px; color:#888;">
                     {{ $u->last_login ? $u->last_login->format('d/m/Y H:i') : 'Jamais' }}
                 </td>
                 <td>
@@ -126,10 +126,10 @@
 {{-- Dialog de confirmation --}}
 <div id="confirm-dialog" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:999; align-items:center; justify-content:center;">
     <div style="background:var(--blanc); border-radius:var(--radius); padding:30px; max-width:440px; width:90%; border:2px solid var(--bleu-france);">
-        <h3 style="font-family:'Poppins',sans-serif; font-size:26px; color:var(--bleu-france); margin-bottom:16px;">
+        <h3 style="font-family:'Outfit',sans-serif; font-size:26px; color:var(--bleu-france); margin-bottom:16px;">
             <i class="fa-solid fa-triangle-exclamation" style="color:var(--rouge-france);"></i> <span id="confirm-title"></span>
         </h3>
-        <p id="confirm-message" style="font-family:'Poppins',sans-serif; font-size:15px; margin-bottom:24px; line-height:1.5;"></p>
+        <p id="confirm-message" style="font-family:'Outfit',sans-serif; font-size:15px; margin-bottom:24px; line-height:1.5;"></p>
         <div style="display:flex; gap:10px; justify-content:flex-end;">
             <button type="button" class="btn btn-secondary" onclick="closeDialog()"><i class="fa-solid fa-xmark"></i> Annuler</button>
             <button type="button" class="btn btn-danger" id="confirm-btn"><i class="fa-solid fa-check"></i> Confirmer</button>
@@ -148,7 +148,7 @@
         border-bottom: 2px solid var(--gris-moyen) !important;
     }
     .form-input {
-        font-family: 'Poppins', sans-serif;
+        font-family: 'Outfit', sans-serif;
         font-size: 15px;
         padding: 8px 12px;
         border: 2px solid var(--gris-moyen);
@@ -176,7 +176,7 @@
         align-items: center;
         gap: 8px;
         padding: 5px 0;
-        font-family: 'Poppins', sans-serif;
+        font-family: 'Outfit', sans-serif;
         font-size: 18px;
         cursor: pointer;
         color: var(--gris-fonce);

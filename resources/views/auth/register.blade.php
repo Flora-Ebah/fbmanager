@@ -31,7 +31,7 @@
                 </div>
                 <button type="submit" class="btn btn-primary" style="width:100%; justify-content: center;">Creer mon compte</button>
             </form>
-            <p style="text-align:center; margin-top:16px; font-family: 'Poppins', sans-serif; font-size: 18px;">
+            <p style="text-align:center; margin-top:16px; font-family: 'Outfit', sans-serif; font-size: 18px;">
                 Deja un compte ? <a href="/login" style="color: var(--bleu-france);">Se connecter</a>
             </p>
         </div>

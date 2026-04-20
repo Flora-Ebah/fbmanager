@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FBManager — Politique de Confidentialite</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bleu-france: #002395;
@@ -16,7 +16,7 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Outfit', sans-serif;
             background: var(--gris-clair);
             color: var(--gris-fonce);
             min-height: 100vh;
@@ -32,11 +32,11 @@
             padding: 0 60px;
         }
         .header h1 {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Outfit', sans-serif;
             font-size: 32px;
         }
         .header p {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Outfit', sans-serif;
             font-size: 18px;
             opacity: 0.8;
             margin-top: 5px;
@@ -50,7 +50,7 @@
             border: 1px solid #D4D4D4;
         }
         h2 {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Outfit', sans-serif;
             font-size: 26px;
             color: var(--bleu-france);
             margin: 25px 0 10px;
@@ -67,7 +67,7 @@
         .footer {
             text-align: center;
             padding: 20px;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Outfit', sans-serif;
             font-size: 16px;
             color: #999;
         }

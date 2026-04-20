@@ -20,7 +20,7 @@
             @if($post->image_url)
                 <img src="{{ $post->image_url }}" alt="Image du post" class="post-card-img" loading="lazy">
             @else
-                <div class="post-card-img" style="display:flex; align-items:center; justify-content:center; font-family:'Poppins',sans-serif; font-size:24px; color:#999;">Pas d'image</div>
+                <div class="post-card-img" style="display:flex; align-items:center; justify-content:center; font-family:'Outfit',sans-serif; font-size:24px; color:#999;">Pas d'image</div>
             @endif
             <div class="post-card-body">
                 <h3>Post #{{ Str::limit($post->post_id, 20) }}</h3>
