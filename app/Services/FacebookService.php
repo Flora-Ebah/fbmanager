@@ -45,9 +45,14 @@ class FacebookService
             $posts = $data['data'] ?? [];
             $allPosts = array_merge($allPosts, $posts);
 
-            // Pagination suivante
-            $url = $data['paging']['next'] ?? null;
-            $params = []; // Les params sont deja dans l'URL next
+            // Pagination suivante : forcer le token si absent
+            $nextUrl = $data['paging']['next'] ?? null;
+            if ($nextUrl && !str_contains($nextUrl, 'access_token=')) {
+                $sep = str_contains($nextUrl, '?') ? '&' : '?';
+                $nextUrl .= $sep . 'access_token=' . urlencode($this->accessToken);
+            }
+            $url = $nextUrl;
+            $params = [];
 
             if (count($allPosts) >= $limit) {
                 break;
@@ -88,7 +93,7 @@ class FacebookService
             $url = $data['paging']['next'] ?? null;
             $params = [];
 
-            if (count($allComments) >= $limit) {
+            if (count($allComments) >= $limit || count($comments) === 0) {
                 break;
             }
         } while ($url);
