@@ -38,71 +38,81 @@
 
         /* ─── NAVBAR ─── */
         .navbar {
-            background: var(--bleu-france);
-            color: var(--blanc);
+            background: var(--blanc);
+            color: var(--gris-fonce);
             padding: 0;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            border-bottom: 1px solid var(--gris-moyen);
             position: sticky;
             top: 0;
             z-index: 100;
         }
         .navbar-inner {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 60px;
-            min-height: 60px;
+            padding: 0 40px;
+            min-height: 64px;
             flex-wrap: wrap;
+            gap: 20px;
         }
         .navbar-brand {
             font-family: 'Outfit', sans-serif;
-            font-size: 14px;
-            color: var(--blanc);
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--gris-fonce);
             text-decoration: none;
-            letter-spacing: 1px;
+            letter-spacing: -0.3px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
         .navbar-brand .logo-icon {
-            width: 32px;
-            height: 32px;
-            background: var(--blanc);
-            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--bleu-france) 0%, #0041d6 100%);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--bleu-france);
-            font-weight: bold;
+            color: var(--blanc);
+            font-weight: 700;
             font-family: 'Outfit', sans-serif;
-            font-size: 20px;
+            font-size: 15px;
         }
         .navbar-links {
             display: flex;
             align-items: center;
-            gap: 0;
+            gap: 4px;
             list-style: none;
+            margin-left: 30px;
+            flex: 1;
         }
         .navbar-links a {
-            color: var(--blanc);
+            color: var(--gris-texte, #6B7280);
             text-decoration: none;
-            padding: 18px 20px;
+            padding: 8px 14px;
             font-family: 'Outfit', sans-serif;
-            font-size: 20px;
-            letter-spacing: 1px;
-            transition: background 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0;
+            border-radius: 8px;
+            transition: all 0.15s;
             display: flex;
             align-items: center;
             gap: 8px;
+            border: none;
         }
-        .navbar-links a:hover,
-        .navbar-links a.active {
-            background: rgba(255,255,255,0.15);
+        .navbar-links a:hover {
+            background: var(--gris-clair);
+            color: var(--gris-fonce);
         }
         .navbar-links a.active {
-            border-bottom: 3px solid var(--rouge-france);
+            background: var(--bleu-france);
+            color: var(--blanc);
+            border: none;
         }
         .navbar-user {
             display: flex;
@@ -111,20 +121,30 @@
         }
         .navbar-user span {
             font-family: 'Outfit', sans-serif;
-            font-size: 18px;
+            font-size: 14px;
+            color: var(--gris-texte, #6B7280);
+            font-weight: 500;
         }
         .btn-logout {
+            background: var(--blanc);
+            color: var(--rouge-france);
+            border: 1.5px solid var(--gris-moyen);
+            padding: 7px 16px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-logout:hover {
             background: var(--rouge-france);
             color: var(--blanc);
-            border: none;
-            padding: 8px 18px;
-            font-family: 'Outfit', sans-serif;
-            font-size: 18px;
-            cursor: pointer;
-            border-radius: var(--radius);
-            transition: opacity 0.2s;
+            border-color: var(--rouge-france);
         }
-        .btn-logout:hover { opacity: 0.85; }
 
         /* Mobile menu toggle */
         .menu-toggle {
@@ -157,18 +177,20 @@
             overflow: hidden;
         }
         .card-header {
-            background: var(--bleu-france);
-            color: var(--blanc);
-            padding: 15px 20px;
+            background: var(--blanc);
+            color: var(--gris-fonce);
+            padding: 18px 24px;
             font-family: 'Outfit', sans-serif;
-            font-size: 24px;
-            letter-spacing: 1px;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            border-bottom: 1px solid var(--gris-moyen);
         }
         .card-body {
-            padding: 20px;
+            padding: 24px;
         }
 
         /* ─── PAGE HEADER ─── */
@@ -214,25 +236,26 @@
         /* ─── BUTTONS ─── */
         .btn {
             font-family: 'Outfit', sans-serif;
-            font-size: 20px;
-            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 9px 18px;
             border: none;
-            border-radius: var(--radius);
+            border-radius: 8px;
             cursor: pointer;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            transition: opacity 0.2s, transform 0.1s;
-            letter-spacing: 0.5px;
+            gap: 7px;
+            transition: all 0.15s;
+            letter-spacing: 0;
         }
-        .btn:hover { opacity: 0.9; }
-        .btn:active { transform: scale(0.97); }
+        .btn:hover { opacity: 0.92; transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+        .btn:active { transform: scale(0.98); }
         .btn-primary { background: var(--bleu-france); color: var(--blanc); }
         .btn-danger { background: var(--rouge-france); color: var(--blanc); }
         .btn-success { background: var(--vert-ok); color: var(--blanc); }
-        .btn-secondary { background: var(--gris-moyen); color: var(--gris-fonce); }
-        .btn-sm { font-size: 17px; padding: 6px 14px; }
+        .btn-secondary { background: var(--blanc); color: var(--gris-fonce); border: 1.5px solid var(--gris-moyen); }
+        .btn-sm { font-size: 13px; padding: 6px 12px; }
 
         /* ─── TABLE ─── */
         .table-container { overflow-x: auto; }
@@ -242,33 +265,42 @@
             font-family: 'Outfit', sans-serif;
         }
         th {
-            background: var(--bleu-france);
-            color: var(--blanc);
-            padding: 12px 16px;
+            background: #F9FAFB;
+            color: #6B7280;
+            padding: 14px 16px;
             text-align: left;
             font-family: 'Outfit', sans-serif;
-            font-size: 18px;
-            letter-spacing: 1px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
             white-space: nowrap;
+            border-bottom: 1px solid var(--gris-moyen);
         }
         td {
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--gris-moyen);
-            font-size: 15px;
+            padding: 14px 16px;
+            border-bottom: 1px solid #F3F4F6;
+            font-size: 14px;
+            color: var(--gris-fonce);
+            vertical-align: middle;
         }
-        tr:hover td { background: rgba(0,35,149,0.03); }
+        tr:hover td { background: #FAFBFD; }
+        tr:last-child td { border-bottom: none; }
 
         /* ─── BADGES ─── */
         .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 6px;
             font-family: 'Outfit', sans-serif;
-            font-size: 16px;
-            letter-spacing: 0.5px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
         }
-        .badge-admin { background: var(--rouge-france); color: var(--blanc); }
-        .badge-user { background: var(--bleu-ciel); color: var(--blanc); }
+        .badge-admin { background: #FEE2E2; color: #991B1B; }
+        .badge-user { background: #DBEAFE; color: #1E3A8A; }
         .badge-nonlu { background: var(--rouge-france); color: var(--blanc); }
         .badge-lu { background: var(--vert-ok); color: var(--blanc); }
         .badge-count {
@@ -298,26 +330,29 @@
         .form-group label {
             display: block;
             font-family: 'Outfit', sans-serif;
-            font-size: 20px;
+            font-size: 13px;
+            font-weight: 500;
             margin-bottom: 6px;
-            color: var(--bleu-france);
+            color: var(--gris-fonce);
         }
         .form-group input,
         .form-group select,
         .form-group textarea {
             width: 100%;
             font-family: 'Outfit', sans-serif;
-            font-size: 16px;
+            font-size: 14px;
             padding: 10px 14px;
-            border: 2px solid var(--gris-moyen);
-            border-radius: var(--radius);
+            border: 1.5px solid var(--gris-moyen);
+            border-radius: 8px;
             outline: none;
-            transition: border-color 0.2s;
+            background: var(--blanc);
+            transition: all 0.15s;
         }
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
             border-color: var(--bleu-france);
+            box-shadow: 0 0 0 3px rgba(0,35,149,0.1);
         }
         .form-error {
             color: var(--rouge-france);
@@ -611,7 +646,7 @@
             <div class="navbar-user">
                 <form action="/logout" method="POST" style="display:inline">
                     @csrf
-                    <button type="submit" class="btn-logout">Deconnexion</button>
+                    <button type="submit" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Déconnexion</button>
                 </form>
             </div>
         </div>
