@@ -3,7 +3,7 @@
 
 @section('content')
 <div class="page-header">
-    <h1><i class="fa-solid fa-newspaper"></i> Detail du Post</h1>
+    <h1><i class="fa-solid fa-newspaper"></i> Détail du Post</h1>
     <a href="/posts" class="btn btn-secondary btn-sm"><i class="fa-solid fa-arrow-left"></i> Retour aux posts</a>
 </div>
 
@@ -17,7 +17,7 @@
         @endif
         <p style="font-size: 16px; line-height: 1.7; margin-bottom: 16px;">{{ $post->message_post ?? 'Aucun contenu' }}</p>
         <div style="display:flex; gap:20px; flex-wrap:wrap; font-family:'Outfit',sans-serif; font-size:18px; color:#888;">
-            <span><i class="fa-regular fa-calendar"></i> {{ $post->temps_creer_post ?? '—' }}</span>
+            <span><i class="fa-regular fa-calendar"></i> {{ $post->temps_créer_post ?? '—' }}</span>
             @if($post->lien)
                 <a href="{{ $post->lien }}" target="_blank" style="color: var(--bleu-france);"><i class="fa-solid fa-arrow-up-right-from-square"></i> Voir sur Facebook</a>
             @endif
@@ -37,19 +37,19 @@
                 <div style="flex:1; min-width:0;">
                     <div class="comment-author"><i class="fa-solid fa-user"></i> {{ $c->nom_auteur ?? 'Anonyme' }}</div>
                     <div class="comment-text">{{ $c->message_commentaire }}</div>
-                    <div class="comment-date"><i class="fa-regular fa-clock"></i> {{ $c->temps_creer ?? '—' }}</div>
+                    <div class="comment-date"><i class="fa-regular fa-clock"></i> {{ $c->temps_créer ?? '—' }}</div>
                 </div>
                 <div style="flex-shrink:0; display:flex; gap:6px; align-items:center;">
                     @if($hasReplies)
-                        <span class="badge-ai-done" title="Reponse deja generee"><i class="fa-solid fa-check-circle"></i> {{ $c->aiReplies->count() }} reponse(s)</span>
+                        <span class="badge-ai-done" title="Réponse deja generee"><i class="fa-solid fa-check-circle"></i> {{ $c->aiReplies->count() }} réponse(s)</span>
                     @endif
                     <button type="button" class="btn btn-primary btn-sm" onclick="generateReply('{{ $c->id_commentaire }}', this)">
-                        <i class="fa-solid fa-robot"></i> {{ $hasReplies ? 'Regenerer' : 'Generer reponse IA' }}
+                        <i class="fa-solid fa-robot"></i> {{ $hasReplies ? 'Regenerer' : 'Generer réponse IA' }}
                     </button>
                 </div>
             </div>
 
-            {{-- Historique des reponses deja generees --}}
+            {{-- Historique des réponses deja generees --}}
             @if($hasReplies)
             @php
                 $proReplies = $c->aiReplies->where('tone', 'professional');
@@ -138,10 +138,10 @@
             </div>
             @endif
 
-            {{-- Panel de nouvelle reponse IA --}}
+            {{-- Panel de nouvelle réponse IA --}}
             <div id="ai-panel-{{ $c->id_commentaire }}" style="display:none; margin-top:12px; padding:14px; background:#F0F4FF; border-radius:var(--radius); border-top:2px solid var(--bleu-ciel);">
                 <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-                    <span style="font-family:'Outfit',sans-serif; font-size:20px; color:var(--bleu-france);"><i class="fa-solid fa-robot"></i> Reponse IA</span>
+                    <span style="font-family:'Outfit',sans-serif; font-size:20px; color:var(--bleu-france);"><i class="fa-solid fa-robot"></i> Réponse IA</span>
                     <div style="display:flex; gap:6px;">
                         <button type="button" class="tone-btn tone-active" onclick="changeTone('{{ $c->id_commentaire }}', 'professional', this)">Pro</button>
                         <button type="button" class="tone-btn" onclick="changeTone('{{ $c->id_commentaire }}', 'friendly', this)">Amical</button>

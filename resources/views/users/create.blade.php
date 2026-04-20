@@ -8,7 +8,7 @@
 </div>
 
 <div class="card" style="max-width: 600px;">
-    <div class="card-header">Creer un utilisateur</div>
+    <div class="card-header">Créer un utilisateur</div>
     <div class="card-body">
         <form method="POST" action="/users">
             @csrf
@@ -28,14 +28,14 @@
                 @error('password') <div class="form-error">{{ $message }}</div> @enderror
             </div>
             <div class="form-group">
-                <label for="role">Role</label>
+                <label for="role">Rôle</label>
                 <select id="role" name="role">
                     <option value="user" {{ old('role') === 'user' ? 'selected' : '' }}>Utilisateur</option>
                     <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Administrateur</option>
                 </select>
                 @error('role') <div class="form-error">{{ $message }}</div> @enderror
             </div>
-            <button type="submit" class="btn btn-success">Creer l'utilisateur</button>
+            <button type="submit" class="btn btn-success">Créer l'utilisateur</button>
         </form>
     </div>
 </div>

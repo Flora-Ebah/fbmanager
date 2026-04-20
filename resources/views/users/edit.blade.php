@@ -29,7 +29,7 @@
                 @error('password') <div class="form-error">{{ $message }}</div> @enderror
             </div>
             <div class="form-group">
-                <label for="role">Role</label>
+                <label for="role">Rôle</label>
                 <select id="role" name="role">
                     <option value="user" {{ old('role', $user->role) === 'user' ? 'selected' : '' }}>Utilisateur</option>
                     <option value="admin" {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}>Administrateur</option>

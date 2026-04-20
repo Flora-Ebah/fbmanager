@@ -29,7 +29,7 @@
                     <label for="password_confirmation">Confirmer le mot de passe</label>
                     <input type="password" id="password_confirmation" name="password_confirmation" required placeholder="Retapez le mot de passe">
                 </div>
-                <button type="submit" class="btn btn-primary" style="width:100%; justify-content: center;">Creer mon compte</button>
+                <button type="submit" class="btn btn-primary" style="width:100%; justify-content: center;">Créer mon compte</button>
             </form>
             <p style="text-align:center; margin-top:16px; font-family: 'Outfit', sans-serif; font-size: 18px;">
                 Deja un compte ? <a href="/login" style="color: var(--bleu-france);">Se connecter</a>

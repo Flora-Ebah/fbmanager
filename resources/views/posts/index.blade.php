@@ -27,7 +27,7 @@
                 <p>{{ $post->message_post ?? 'Aucun contenu' }}</p>
             </div>
             <div class="post-card-footer">
-                <span class="meta">{{ $post->temps_creer_post ?? '—' }}</span>
+                <span class="meta">{{ $post->temps_créer_post ?? '—' }}</span>
                 <span class="badge badge-count">{{ $post->commentaires_count }} com.</span>
             </div>
         </a>

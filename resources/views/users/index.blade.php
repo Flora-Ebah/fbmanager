@@ -12,9 +12,9 @@
                 <label class="col-check"><input type="checkbox" checked onchange="toggleCol('col-user')"> Utilisateur</label>
                 <label class="col-check"><input type="checkbox" checked onchange="toggleCol('col-email')"> E-mail</label>
                 <label class="col-check"><input type="checkbox" checked onchange="toggleCol('col-pass')"> Mot de passe</label>
-                <label class="col-check"><input type="checkbox" checked onchange="toggleCol('col-role')"> Role</label>
+                <label class="col-check"><input type="checkbox" checked onchange="toggleCol('col-role')"> Rôle</label>
                 <label class="col-check"><input type="checkbox" checked onchange="toggleCol('col-actif')"> Actif</label>
-                <label class="col-check"><input type="checkbox" checked onchange="toggleCol('col-login')"> Derniere connexion</label>
+                <label class="col-check"><input type="checkbox" checked onchange="toggleCol('col-login')"> Dernière connexion</label>
             </div>
         </div>
         <button type="button" class="btn btn-success" onclick="showForm('create')"><i class="fa-solid fa-user-plus"></i> Nouvel utilisateur</button>
@@ -45,7 +45,7 @@
                     <input type="password" id="f-password" name="password" placeholder="Mot de passe" class="form-input">
                 </div>
                 <div class="form-group" style="margin-bottom:0;">
-                    <label for="f-role"><i class="fa-solid fa-shield-halved"></i> Role</label>
+                    <label for="f-role"><i class="fa-solid fa-shield-halved"></i> Rôle</label>
                     <select id="f-role" name="role" class="form-input">
                         <option value="user">Utilisateur</option>
                         <option value="admin">Administrateur</option>
@@ -73,9 +73,9 @@
                 <th class="col-user">Utilisateur</th>
                 <th class="col-email">E-mail</th>
                 <th class="col-pass">Mot de passe</th>
-                <th class="col-role">Role</th>
+                <th class="col-role">Rôle</th>
                 <th class="col-actif">Actif</th>
-                <th class="col-login">Derniere connexion</th>
+                <th class="col-login">Dernière connexion</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -231,7 +231,7 @@
             document.getElementById('f-email').value = email;
             document.getElementById('f-password').value = '';
             document.getElementById('f-password').required = false;
-            document.getElementById('f-password').placeholder = 'Inchange si vide';
+            document.getElementById('f-password').placeholder = 'Inchangé si vide';
             document.getElementById('f-role').value = role;
             currentEditId = id;
             history.pushState(null, '', '/users/' + id + '/edit');
@@ -251,8 +251,8 @@
     }
 
     function confirmSubmit() {
-        var label = currentEditId ? 'Modifier l\'utilisateur' : 'Creer un utilisateur';
-        var msg = currentEditId ? 'Voulez-vous vraiment enregistrer les modifications ?' : 'Voulez-vous vraiment creer ce nouvel utilisateur ?';
+        var label = currentEditId ? 'Modifier l\'utilisateur' : 'Créer un utilisateur';
+        var msg = currentEditId ? 'Voulez-vous vraiment enregistrer les modifications ?' : 'Voulez-vous vraiment créer ce nouvel utilisateur ?';
         showConfirmDialog(label, msg, function() {
             document.getElementById('user-form').submit();
         });
@@ -260,7 +260,7 @@
 
     // --- Delete ---
     function confirmDelete(id, username) {
-        showConfirmDialog('Supprimer l\'utilisateur', 'Supprimer "' + username + '" ? Cette action est irreversible.', function() {
+        showConfirmDialog('Supprimer l\'utilisateur', 'Supprimer "' + username + '" ? Cette action est irréversible.', function() {
             document.getElementById('delete-form-' + id).submit();
         });
     }
