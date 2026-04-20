@@ -17,7 +17,7 @@
         @endif
         <p style="font-size: 16px; line-height: 1.7; margin-bottom: 16px;">{{ $post->message_post ?? 'Aucun contenu' }}</p>
         <div style="display:flex; gap:20px; flex-wrap:wrap; font-family:'Outfit',sans-serif; font-size:18px; color:#888;">
-            <span><i class="fa-regular fa-calendar"></i> {{ $post->temps_créer_post ?? '—' }}</span>
+            <span><i class="fa-regular fa-calendar"></i> {{ $post->temps_creer_post ?? '—' }}</span>
             @if($post->lien)
                 <a href="{{ $post->lien }}" target="_blank" style="color: var(--bleu-france);"><i class="fa-solid fa-arrow-up-right-from-square"></i> Voir sur Facebook</a>
             @endif
@@ -37,7 +37,7 @@
                 <div style="flex:1; min-width:0;">
                     <div class="comment-author"><i class="fa-solid fa-user"></i> {{ $c->nom_auteur ?? 'Anonyme' }}</div>
                     <div class="comment-text">{{ $c->message_commentaire }}</div>
-                    <div class="comment-date"><i class="fa-regular fa-clock"></i> {{ $c->temps_créer ?? '—' }}</div>
+                    <div class="comment-date"><i class="fa-regular fa-clock"></i> {{ $c->temps_creer ?? '—' }}</div>
                 </div>
                 <div style="flex-shrink:0; display:flex; gap:6px; align-items:center;">
                     @if($hasReplies)
