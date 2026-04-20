@@ -81,7 +81,7 @@ class ImportFacebookJob implements ShouldQueue
                         [
                             'post_id' => $postId,
                             'message_commentaire' => $fbComment['message'] ?? '',
-                            'nom_auteur' => $fbComment['from']['name'] ?? 'Inconnu',
+                            'nom_auteur' => $fbComment['from']['name'] ?? 'Utilisateur Facebook',
                             'temps_creer' => $fbComment['created_time'] ?? null,
                         ]
                     );

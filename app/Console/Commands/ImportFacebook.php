@@ -103,7 +103,7 @@ class ImportFacebook extends Command
                     $commentId = $fbComment['id'] ?? null;
                     if (!$commentId) continue;
 
-                    $authorName = $fbComment['from']['name'] ?? 'Inconnu';
+                    $authorName = $fbComment['from']['name'] ?? 'Utilisateur Facebook';
 
                     $comment = Commentaire::updateOrCreate(
                         ['id_commentaire' => $commentId],
