@@ -24,7 +24,12 @@
         .header {
             background: var(--bleu-france);
             color: var(--blanc);
-            padding: 30px 60px;
+            padding: 30px 0;
+        }
+        .header-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 60px;
         }
         .header h1 {
             font-family: 'VT323', monospace;
@@ -67,15 +72,18 @@
             color: #999;
         }
         @media (max-width: 768px) {
-            .header { padding: 20px; }
+            .header { padding: 20px 0; }
+            .header-inner { padding: 0 20px; }
             .content { padding: 20px; margin: 15px; }
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>Politique de Confidentialite</h1>
-        <p>FBManager — Facebook Comment Manager</p>
+        <div class="header-inner">
+            <h1>Politique de Confidentialite</h1>
+            <p>FBManager — Facebook Comment Manager</p>
+        </div>
     </div>
 
     <div class="content">
