@@ -31,7 +31,7 @@
         <span class="pg-btn pg-disabled"><i class="fa-solid fa-chevron-right"></i></span>
     @endif
 
-    <span style="margin-left:12px; font-family:'Inter',sans-serif; font-size:16px; color:#888;">
+    <span style="margin-left:12px; font-family:'Poppins',sans-serif; font-size:16px; color:#888;">
         {{ $paginator->firstItem() }}-{{ $paginator->lastItem() }} sur {{ $paginator->total() }}
     </span>
 </nav>
@@ -44,7 +44,7 @@
         min-width: 36px;
         height: 36px;
         padding: 0 10px;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Poppins', sans-serif;
         font-size: 18px;
         text-decoration: none;
         color: var(--bleu-france);

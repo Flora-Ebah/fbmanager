@@ -16,7 +16,7 @@
             <img src="{{ $post->image_url }}" alt="Image du post" style="width:100%; max-height:400px; object-fit:cover; border-radius: var(--radius); margin-bottom: 16px;">
         @endif
         <p style="font-size: 16px; line-height: 1.7; margin-bottom: 16px;">{{ $post->message_post ?? 'Aucun contenu' }}</p>
-        <div style="display:flex; gap:20px; flex-wrap:wrap; font-family:'Inter',sans-serif; font-size:18px; color:#888;">
+        <div style="display:flex; gap:20px; flex-wrap:wrap; font-family:'Poppins',sans-serif; font-size:18px; color:#888;">
             <span><i class="fa-regular fa-calendar"></i> {{ $post->temps_creer_post ?? '—' }}</span>
             @if($post->lien)
                 <a href="{{ $post->lien }}" target="_blank" style="color: var(--bleu-france);"><i class="fa-solid fa-arrow-up-right-from-square"></i> Voir sur Facebook</a>
@@ -86,7 +86,7 @@
                         @foreach($proReplies as $r)
                         <div class="ai-history-item">
                             <div class="ai-history-meta">
-                                <span style="font-family:'Inter',sans-serif; font-size:15px; color:#888;">
+                                <span style="font-family:'Poppins',sans-serif; font-size:15px; color:#888;">
                                     <i class="fa-solid fa-user"></i> {{ $r->user->username ?? '?' }} &middot; {{ $r->created_at->format('d/m/Y H:i') }}
                                 </span>
                             </div>
@@ -104,7 +104,7 @@
                         @foreach($friendlyReplies as $r)
                         <div class="ai-history-item">
                             <div class="ai-history-meta">
-                                <span style="font-family:'Inter',sans-serif; font-size:15px; color:#888;">
+                                <span style="font-family:'Poppins',sans-serif; font-size:15px; color:#888;">
                                     <i class="fa-solid fa-user"></i> {{ $r->user->username ?? '?' }} &middot; {{ $r->created_at->format('d/m/Y H:i') }}
                                 </span>
                             </div>
@@ -122,7 +122,7 @@
                         @foreach($casualReplies as $r)
                         <div class="ai-history-item">
                             <div class="ai-history-meta">
-                                <span style="font-family:'Inter',sans-serif; font-size:15px; color:#888;">
+                                <span style="font-family:'Poppins',sans-serif; font-size:15px; color:#888;">
                                     <i class="fa-solid fa-user"></i> {{ $r->user->username ?? '?' }} &middot; {{ $r->created_at->format('d/m/Y H:i') }}
                                 </span>
                             </div>
@@ -141,14 +141,14 @@
             {{-- Panel de nouvelle reponse IA --}}
             <div id="ai-panel-{{ $c->id_commentaire }}" style="display:none; margin-top:12px; padding:14px; background:#F0F4FF; border-radius:var(--radius); border-top:2px solid var(--bleu-ciel);">
                 <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-                    <span style="font-family:'Inter',sans-serif; font-size:20px; color:var(--bleu-france);"><i class="fa-solid fa-robot"></i> Reponse IA</span>
+                    <span style="font-family:'Poppins',sans-serif; font-size:20px; color:var(--bleu-france);"><i class="fa-solid fa-robot"></i> Reponse IA</span>
                     <div style="display:flex; gap:6px;">
                         <button type="button" class="tone-btn tone-active" onclick="changeTone('{{ $c->id_commentaire }}', 'professional', this)">Pro</button>
                         <button type="button" class="tone-btn" onclick="changeTone('{{ $c->id_commentaire }}', 'friendly', this)">Amical</button>
                         <button type="button" class="tone-btn" onclick="changeTone('{{ $c->id_commentaire }}', 'casual', this)">Decontracte</button>
                     </div>
                 </div>
-                <div id="ai-loading-{{ $c->id_commentaire }}" style="display:none; text-align:center; padding:20px; font-family:'Inter',sans-serif; font-size:20px; color:#888;">
+                <div id="ai-loading-{{ $c->id_commentaire }}" style="display:none; text-align:center; padding:20px; font-family:'Poppins',sans-serif; font-size:20px; color:#888;">
                     <i class="fa-solid fa-spinner fa-spin"></i> Generation en cours...
                 </div>
                 <div id="ai-result-{{ $c->id_commentaire }}" style="display:none;">
@@ -165,7 +165,7 @@
                         </button>
                     </div>
                 </div>
-                <div id="ai-error-{{ $c->id_commentaire }}" style="display:none; color:var(--rouge-france); font-family:'Inter',sans-serif; font-size:18px;"></div>
+                <div id="ai-error-{{ $c->id_commentaire }}" style="display:none; color:var(--rouge-france); font-family:'Poppins',sans-serif; font-size:18px;"></div>
             </div>
         </div>
         @endforeach
@@ -178,7 +178,7 @@
 
 <style>
     .tone-btn {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Poppins', sans-serif;
         font-size: 16px;
         padding: 4px 12px;
         border: 1px solid var(--bleu-ciel);
@@ -192,7 +192,7 @@
     .tone-active { background: var(--bleu-france) !important; color: var(--blanc) !important; border-color: var(--bleu-france) !important; }
 
     .badge-ai-done {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Poppins', sans-serif;
         font-size: 16px;
         color: var(--vert-ok);
         display: inline-flex;
@@ -206,7 +206,7 @@
         align-items: center;
     }
     .history-tab {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Poppins', sans-serif;
         font-size: 15px;
         padding: 3px 10px;
         border: 1px solid var(--gris-moyen);
