@@ -34,6 +34,31 @@ Route::middleware(['auth', \App\Http\Middleware\AutoImportFacebook::class])->gro
     Route::post('/ai/suggest-multiple', [AiController::class, 'suggestMultipleReplies'])->name('ai.suggest-multiple');
     Route::post('/ai/suggest-messenger', [AiController::class, 'suggestMessengerReply'])->name('ai.suggest-messenger');
 
+    // Imports manuels (trigger en arriere-plan)
+    Route::post('/import/facebook', function () {
+        $php = env('PHP_BINARY_PATH', PHP_BINARY ?: 'php');
+        $artisan = base_path('artisan');
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            pclose(popen("start /B \"\" \"{$php}\" \"{$artisan}\" import:facebook 2>&1", 'r'));
+        } else {
+            exec("\"{$php}\" \"{$artisan}\" import:facebook > /dev/null 2>&1 &");
+        }
+        \Illuminate\Support\Facades\Cache::put('facebook_last_manual_import', now(), 60);
+        return response()->json(['success' => true, 'message' => 'Import des publications lancé en arrière-plan']);
+    })->name('import.facebook');
+
+    Route::post('/import/messenger', function () {
+        $php = env('PHP_BINARY_PATH', PHP_BINARY ?: 'php');
+        $artisan = base_path('artisan');
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            pclose(popen("start /B \"\" \"{$php}\" \"{$artisan}\" import:messenger 2>&1", 'r'));
+        } else {
+            exec("\"{$php}\" \"{$artisan}\" import:messenger > /dev/null 2>&1 &");
+        }
+        \Illuminate\Support\Facades\Cache::put('messenger_last_manual_import', now(), 60);
+        return response()->json(['success' => true, 'message' => 'Import Messenger lancé en arrière-plan']);
+    })->name('import.messenger');
+
     // Messenger
     Route::get('/messenger', [MessengerController::class, 'index'])->name('messenger.index');
     Route::get('/messenger/{conversationId}', [MessengerController::class, 'show'])->name('messenger.show');
