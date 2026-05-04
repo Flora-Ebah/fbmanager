@@ -30,9 +30,11 @@ class AutoImportFacebook
             if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
                 // Windows : start /B lance en arriere-plan
                 pclose(popen("start /B \"\" \"{$php}\" \"{$artisan}\" import:facebook 2>&1", 'r'));
+                pclose(popen("start /B \"\" \"{$php}\" \"{$artisan}\" import:messenger 2>&1", 'r'));
             } else {
                 // Linux/Mac : & + nohup en arriere-plan
                 exec("\"{$php}\" \"{$artisan}\" import:facebook > /dev/null 2>&1 &");
+                exec("\"{$php}\" \"{$artisan}\" import:messenger > /dev/null 2>&1 &");
             }
         }
 

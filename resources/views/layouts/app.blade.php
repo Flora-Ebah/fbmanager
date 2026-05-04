@@ -637,7 +637,7 @@
 
             <ul class="navbar-links">
                 <li><a href="/posts" class="{{ request()->is('posts*') ? 'active' : '' }}"><i class="fa-brands fa-facebook"></i> Publications</a></li>
-                {{-- <li><a href="/messenger" class="{{ request()->is('messenger*') ? 'active' : '' }}"><i class="fa-brands fa-facebook-messenger"></i> Messenger</a></li> --}}
+                <li><a href="/messenger" class="{{ request()->is('messenger*') ? 'active' : '' }}"><i class="fa-brands fa-facebook-messenger"></i> Messenger</a></li>
                 @if(auth()->user()->isAdmin())
                 <li><a href="/users" class="{{ request()->is('users*') ? 'active' : '' }}"><i class="fa-solid fa-users-gear"></i> Utilisateurs</a></li>
                 @endif

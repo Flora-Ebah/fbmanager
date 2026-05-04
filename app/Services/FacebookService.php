@@ -134,6 +134,90 @@ class FacebookService
     }
 
     /**
+     * Recuperer les conversations Messenger de la page
+     */
+    public function getConversations(int $limit = 100): array
+    {
+        $allConvos = [];
+        $url = "{$this->baseUrl}/{$this->pageId}/conversations";
+
+        $params = [
+            'access_token' => $this->accessToken,
+            'fields' => 'id,updated_time,message_count,unread_count,participants,snippet',
+            'limit' => min($limit, 100),
+        ];
+
+        do {
+            $response = $this->requestWithRetry($url, $params);
+
+            if (!$response || !$response->successful()) {
+                Log::error('Facebook API error (conversations): ' . ($response ? $response->body() : 'no response'));
+                break;
+            }
+
+            $data = $response->json();
+            $convos = $data['data'] ?? [];
+            $allConvos = array_merge($allConvos, $convos);
+
+            $nextUrl = $data['paging']['next'] ?? null;
+            if ($nextUrl && !str_contains($nextUrl, 'access_token=')) {
+                $sep = str_contains($nextUrl, '?') ? '&' : '?';
+                $nextUrl .= $sep . 'access_token=' . urlencode($this->accessToken);
+            }
+            $url = $nextUrl;
+            $params = [];
+
+            if (count($allConvos) >= $limit) {
+                break;
+            }
+        } while ($url);
+
+        return $allConvos;
+    }
+
+    /**
+     * Recuperer les messages d'une conversation
+     */
+    public function getConversationMessages(string $conversationId, int $limit = 100): array
+    {
+        $allMessages = [];
+        $url = "{$this->baseUrl}/{$conversationId}/messages";
+
+        $params = [
+            'access_token' => $this->accessToken,
+            'fields' => 'id,message,from,created_time',
+            'limit' => min($limit, 100),
+        ];
+
+        do {
+            $response = $this->requestWithRetry($url, $params);
+
+            if (!$response || !$response->successful()) {
+                Log::error("Facebook API error (messages for {$conversationId}): " . ($response ? $response->body() : 'no response'));
+                break;
+            }
+
+            $data = $response->json();
+            $messages = $data['data'] ?? [];
+            $allMessages = array_merge($allMessages, $messages);
+
+            $nextUrl = $data['paging']['next'] ?? null;
+            if ($nextUrl && !str_contains($nextUrl, 'access_token=')) {
+                $sep = str_contains($nextUrl, '?') ? '&' : '?';
+                $nextUrl .= $sep . 'access_token=' . urlencode($this->accessToken);
+            }
+            $url = $nextUrl;
+            $params = [];
+
+            if (count($allMessages) >= $limit) {
+                break;
+            }
+        } while ($url);
+
+        return $allMessages;
+    }
+
+    /**
      * Tester la connexion a l'API Facebook
      */
     public function testConnection(): array

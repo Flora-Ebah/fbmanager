@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class MessengerMessage extends Model
 {
-    protected $fillable = ['conversation_id', 'nom_expediteur', 'message', 'temps_envoi', 'type_message', 'statut'];
+    protected $fillable = ['fb_message_id', 'conversation_id', 'nom_expediteur', 'message', 'temps_envoi', 'type_message', 'statut'];
 
     public function conversation()
     {
