@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
@@ -19,47 +20,43 @@ class ImportController extends Controller
 
     protected function launch(string $type)
     {
-        $php = env('PHP_BINARY_PATH', PHP_BINARY ?: 'php');
-        $artisan = base_path('artisan');
-        $command = "{$php} {$artisan} import:{$type}";
+        Log::channel('single')->info("[MANUAL-IMPORT] Demande {$type}");
 
-        Log::channel('single')->info("[MANUAL-IMPORT] Tentative {$type} | php={$php} | exec=" . (function_exists('exec') ? 'oui' : 'non'));
+        // Marquer le debut
+        Cache::put("{$type}_running", true, 3600);
+        Cache::put("{$type}_started_at", now()->toDateTimeString(), 3600);
 
-        $launched = false;
+        // Renvoyer la reponse au client AVANT de lancer l'import
+        // pour que le navigateur ne reste pas en attente
+        $response = response()->json([
+            'success' => true,
+            'message' => "Import {$type} démarré ! Cela peut prendre quelques minutes.",
+        ]);
 
-        try {
-            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-                if (function_exists('popen')) {
-                    pclose(popen("start /B \"\" \"{$php}\" \"{$artisan}\" import:{$type} 2>&1", 'r'));
-                    $launched = true;
-                }
-            } else {
-                if (function_exists('exec')) {
-                    $output = [];
-                    $returnCode = 0;
-                    exec("nohup {$command} > /dev/null 2>&1 &", $output, $returnCode);
-                    $launched = $returnCode === 0;
-                    Log::channel('single')->info("[MANUAL-IMPORT] exec retour={$returnCode}");
-                }
-                if (!$launched && function_exists('popen')) {
-                    $h = popen("nohup {$command} > /dev/null 2>&1 &", 'r');
-                    if ($h) { pclose($h); $launched = true; }
-                }
-                if (!$launched && function_exists('shell_exec')) {
-                    shell_exec("nohup {$command} > /dev/null 2>&1 &");
-                    $launched = true;
-                }
-            }
-        } catch (\Throwable $e) {
-            Log::channel('single')->error("[MANUAL-IMPORT] Exception: " . $e->getMessage());
+        // Envoyer la reponse maintenant
+        $response->send();
+
+        // Si fastcgi est dispo, fermer la connexion proprement
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
         }
 
-        Cache::put("{$type}_last_manual_import", now(), 60);
-        Log::channel('single')->info("[MANUAL-IMPORT] {$type} launched=" . ($launched ? 'oui' : 'NON'));
+        // Pas de timeout, ignorer la deconnexion du client
+        @set_time_limit(0);
+        @ignore_user_abort(true);
 
-        return response()->json([
-            'success' => $launched,
-            'message' => $launched ? "Import {$type} lancé en arrière-plan" : "Échec lancement (consultez les logs)",
-        ]);
+        try {
+            Log::channel('single')->info("[MANUAL-IMPORT] Lancement artisan import:{$type}");
+            Artisan::call("import:{$type}");
+            Log::channel('single')->info("[MANUAL-IMPORT] Termine {$type}: " . trim(Artisan::output()));
+        } catch (\Throwable $e) {
+            Log::channel('single')->error("[MANUAL-IMPORT] Erreur {$type}: " . $e->getMessage());
+        }
+
+        Cache::forget("{$type}_running");
+        Cache::put("{$type}_last_finished_at", now()->toDateTimeString(), 86400);
+
+        // On a deja envoye la reponse, on retourne juste pour forme
+        return $response;
     }
 }
