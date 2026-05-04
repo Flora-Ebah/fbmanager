@@ -2,58 +2,11 @@
 
 use App\Http\Controllers\AiController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ImportController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\MessengerController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cache;
-
-if (!function_exists('launchImport')) {
-function launchImport(string $type) {
-    $php = env('PHP_BINARY_PATH', PHP_BINARY ?: 'php');
-    $artisan = base_path('artisan');
-    $command = "{$php} {$artisan} import:{$type}";
-
-    Log::channel('single')->info("[MANUAL-IMPORT] Tentative {$type} | php={$php} | execEnabled=" . (function_exists('exec') ? 'oui' : 'non') . " | popenEnabled=" . (function_exists('popen') ? 'oui' : 'non'));
-
-    $launched = false;
-
-    try {
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            if (function_exists('popen')) {
-                pclose(popen("start /B \"\" \"{$php}\" \"{$artisan}\" import:{$type} 2>&1", 'r'));
-                $launched = true;
-            }
-        } else {
-            // Try several approaches
-            if (function_exists('exec')) {
-                exec("nohup {$command} > /dev/null 2>&1 &", $output, $returnCode);
-                $launched = $returnCode === 0;
-                Log::channel('single')->info("[MANUAL-IMPORT] exec retour={$returnCode}");
-            }
-            if (!$launched && function_exists('popen')) {
-                $h = popen("nohup {$command} > /dev/null 2>&1 &", 'r');
-                if ($h) { pclose($h); $launched = true; }
-            }
-            if (!$launched && function_exists('shell_exec')) {
-                shell_exec("nohup {$command} > /dev/null 2>&1 &");
-                $launched = true;
-            }
-        }
-    } catch (\Throwable $e) {
-        Log::channel('single')->error("[MANUAL-IMPORT] Exception: " . $e->getMessage());
-    }
-
-    Cache::put("{$type}_last_manual_import", now(), 60);
-    Log::channel('single')->info("[MANUAL-IMPORT] {$type} launched=" . ($launched ? 'oui' : 'NON'));
-
-    return response()->json([
-        'success' => $launched,
-        'message' => $launched ? "Import {$type} lancé en arrière-plan" : "Échec lancement (consultez les logs)",
-    ]);
-}
-}
 
 // Redirect root to posts
 Route::get('/', fn () => redirect('/posts'));
@@ -83,13 +36,8 @@ Route::middleware(['auth', \App\Http\Middleware\AutoImportFacebook::class])->gro
     Route::post('/ai/suggest-messenger', [AiController::class, 'suggestMessengerReply'])->name('ai.suggest-messenger');
 
     // Imports manuels (trigger en arriere-plan)
-    Route::post('/import/facebook', function () {
-        return launchImport('facebook');
-    })->name('import.facebook');
-
-    Route::post('/import/messenger', function () {
-        return launchImport('messenger');
-    })->name('import.messenger');
+    Route::post('/import/facebook', [ImportController::class, 'facebook'])->name('import.facebook');
+    Route::post('/import/messenger', [ImportController::class, 'messenger'])->name('import.messenger');
 
     // Messenger
     Route::get('/messenger', [MessengerController::class, 'index'])->name('messenger.index');
