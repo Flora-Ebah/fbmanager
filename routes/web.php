@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 
+if (!function_exists('launchImport')) {
 function launchImport(string $type) {
     $php = env('PHP_BINARY_PATH', PHP_BINARY ?: 'php');
     $artisan = base_path('artisan');
@@ -51,6 +52,7 @@ function launchImport(string $type) {
         'success' => $launched,
         'message' => $launched ? "Import {$type} lancé en arrière-plan" : "Échec lancement (consultez les logs)",
     ]);
+}
 }
 
 // Redirect root to posts
