@@ -6,6 +6,52 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\MessengerController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
+
+function launchImport(string $type) {
+    $php = env('PHP_BINARY_PATH', PHP_BINARY ?: 'php');
+    $artisan = base_path('artisan');
+    $command = "{$php} {$artisan} import:{$type}";
+
+    Log::channel('single')->info("[MANUAL-IMPORT] Tentative {$type} | php={$php} | execEnabled=" . (function_exists('exec') ? 'oui' : 'non') . " | popenEnabled=" . (function_exists('popen') ? 'oui' : 'non'));
+
+    $launched = false;
+
+    try {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            if (function_exists('popen')) {
+                pclose(popen("start /B \"\" \"{$php}\" \"{$artisan}\" import:{$type} 2>&1", 'r'));
+                $launched = true;
+            }
+        } else {
+            // Try several approaches
+            if (function_exists('exec')) {
+                exec("nohup {$command} > /dev/null 2>&1 &", $output, $returnCode);
+                $launched = $returnCode === 0;
+                Log::channel('single')->info("[MANUAL-IMPORT] exec retour={$returnCode}");
+            }
+            if (!$launched && function_exists('popen')) {
+                $h = popen("nohup {$command} > /dev/null 2>&1 &", 'r');
+                if ($h) { pclose($h); $launched = true; }
+            }
+            if (!$launched && function_exists('shell_exec')) {
+                shell_exec("nohup {$command} > /dev/null 2>&1 &");
+                $launched = true;
+            }
+        }
+    } catch (\Throwable $e) {
+        Log::channel('single')->error("[MANUAL-IMPORT] Exception: " . $e->getMessage());
+    }
+
+    Cache::put("{$type}_last_manual_import", now(), 60);
+    Log::channel('single')->info("[MANUAL-IMPORT] {$type} launched=" . ($launched ? 'oui' : 'NON'));
+
+    return response()->json([
+        'success' => $launched,
+        'message' => $launched ? "Import {$type} lancé en arrière-plan" : "Échec lancement (consultez les logs)",
+    ]);
+}
 
 // Redirect root to posts
 Route::get('/', fn () => redirect('/posts'));
@@ -36,27 +82,11 @@ Route::middleware(['auth', \App\Http\Middleware\AutoImportFacebook::class])->gro
 
     // Imports manuels (trigger en arriere-plan)
     Route::post('/import/facebook', function () {
-        $php = env('PHP_BINARY_PATH', PHP_BINARY ?: 'php');
-        $artisan = base_path('artisan');
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            pclose(popen("start /B \"\" \"{$php}\" \"{$artisan}\" import:facebook 2>&1", 'r'));
-        } else {
-            exec("\"{$php}\" \"{$artisan}\" import:facebook > /dev/null 2>&1 &");
-        }
-        \Illuminate\Support\Facades\Cache::put('facebook_last_manual_import', now(), 60);
-        return response()->json(['success' => true, 'message' => 'Import des publications lancé en arrière-plan']);
+        return launchImport('facebook');
     })->name('import.facebook');
 
     Route::post('/import/messenger', function () {
-        $php = env('PHP_BINARY_PATH', PHP_BINARY ?: 'php');
-        $artisan = base_path('artisan');
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            pclose(popen("start /B \"\" \"{$php}\" \"{$artisan}\" import:messenger 2>&1", 'r'));
-        } else {
-            exec("\"{$php}\" \"{$artisan}\" import:messenger > /dev/null 2>&1 &");
-        }
-        \Illuminate\Support\Facades\Cache::put('messenger_last_manual_import', now(), 60);
-        return response()->json(['success' => true, 'message' => 'Import Messenger lancé en arrière-plan']);
+        return launchImport('messenger');
     })->name('import.messenger');
 
     // Messenger
