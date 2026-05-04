@@ -13,7 +13,7 @@
     </form>
 </div>
 
-<div class="card">
+<div class="msg-list-wrapper">
     @if($conversations->count() > 0)
         <ul class="msg-convo-list">
             @foreach($conversations as $convo)
@@ -60,6 +60,12 @@
 </div>
 
 <style>
+    .msg-list-wrapper {
+        background: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
     .msg-convo-list {
         list-style: none;
         padding: 0;
