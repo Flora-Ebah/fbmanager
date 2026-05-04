@@ -50,6 +50,34 @@
             @endif
         </div>
     </div>
+
+    {{-- Zone IA --}}
+    <div class="chat-ai-bar">
+        <div class="ai-actions">
+            <button type="button" class="btn-ai" data-tone="professional" onclick="suggestAi('professional')">
+                <i class="fa-solid fa-robot"></i> Réponse pro
+            </button>
+            <button type="button" class="btn-ai" data-tone="friendly" onclick="suggestAi('friendly')">
+                <i class="fa-solid fa-face-smile"></i> Amicale
+            </button>
+            <button type="button" class="btn-ai" data-tone="casual" onclick="suggestAi('casual')">
+                <i class="fa-solid fa-comment"></i> Décontractée
+            </button>
+        </div>
+        <div id="ai-result" class="ai-result" style="display:none;">
+            <div class="ai-result-header">
+                <span><i class="fa-solid fa-robot"></i> Suggestion IA <span id="ai-tone-label" class="ai-tone-pill"></span></span>
+                <button type="button" class="ai-copy-btn" onclick="copyAiReply()" title="Copier">
+                    <i class="fa-solid fa-copy"></i>
+                </button>
+            </div>
+            <div id="ai-reply-text" class="ai-reply-text"></div>
+        </div>
+        <div id="ai-loading" class="ai-loading" style="display:none;">
+            <i class="fa-solid fa-spinner fa-spin"></i> Génération en cours...
+        </div>
+        <div id="ai-error" class="ai-error" style="display:none;"></div>
+    </div>
 </div>
 
 <style>
@@ -57,13 +85,12 @@
 
     .chat-wrapper {
         background: #fff;
-        border: 1px solid var(--gris-moyen);
-        border-radius: 12px;
+        border: none;
+        border-radius: 0;
         overflow: hidden;
-        height: calc(100vh - 140px);
+        height: calc(100vh - 100px);
         display: flex;
         flex-direction: column;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     }
 
     .chat-header {
@@ -190,6 +217,98 @@
         font-weight: 500;
     }
 
+    /* ── AI bar ── */
+    .chat-ai-bar {
+        border-top: 1px solid var(--gris-moyen);
+        padding: 14px 20px;
+        background: #fff;
+    }
+    .ai-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    .btn-ai {
+        background: #F3F4F6;
+        border: 1px solid #E5E7EB;
+        color: var(--gris-fonce);
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.15s;
+    }
+    .btn-ai:hover {
+        background: var(--bleu-france);
+        color: #fff;
+        border-color: var(--bleu-france);
+    }
+    .btn-ai:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .ai-result {
+        margin-top: 12px;
+        background: linear-gradient(135deg, #EFF6FF 0%, #F5F3FF 100%);
+        border: 1px solid #C7D2FE;
+        border-radius: 10px;
+        padding: 12px 14px;
+    }
+    .ai-result-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--bleu-france);
+    }
+    .ai-tone-pill {
+        background: var(--bleu-france);
+        color: #fff;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 10px;
+        margin-left: 6px;
+        text-transform: uppercase;
+    }
+    .ai-copy-btn {
+        background: none;
+        border: 1px solid #C7D2FE;
+        color: var(--bleu-france);
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 12px;
+        transition: all 0.15s;
+    }
+    .ai-copy-btn:hover { background: var(--bleu-france); color: #fff; }
+    .ai-reply-text {
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--gris-fonce);
+        white-space: pre-wrap;
+    }
+    .ai-loading {
+        margin-top: 10px;
+        padding: 10px;
+        text-align: center;
+        color: #6B7280;
+        font-size: 13px;
+    }
+    .ai-error {
+        margin-top: 10px;
+        padding: 10px 14px;
+        background: #FEE2E2;
+        border: 1px solid #FECACA;
+        color: #991B1B;
+        border-radius: 8px;
+        font-size: 13px;
+    }
+
     /* Custom scrollbar */
     .chat-body::-webkit-scrollbar { width: 6px; }
     .chat-body::-webkit-scrollbar-track { background: transparent; }
@@ -272,5 +391,57 @@
         }
         function hashCode(str) { let h=0; for(let i=0;i<str.length;i++){h=((h<<5)-h)+str.charCodeAt(i);h|=0;} return h; }
     });
+
+    // ─── Suggestion IA ───
+    async function suggestAi(tone) {
+        const conversationId = document.getElementById('chat-body').dataset.conversationId;
+        const buttons = document.querySelectorAll('.btn-ai');
+        const result = document.getElementById('ai-result');
+        const loading = document.getElementById('ai-loading');
+        const error = document.getElementById('ai-error');
+
+        buttons.forEach(b => b.disabled = true);
+        result.style.display = 'none';
+        error.style.display = 'none';
+        loading.style.display = 'block';
+
+        try {
+            const res = await fetch('/ai/suggest-messenger', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ conversation_id: conversationId, tone: tone }),
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                document.getElementById('ai-tone-label').textContent = tone;
+                document.getElementById('ai-reply-text').textContent = data.reply;
+                result.style.display = 'block';
+            } else {
+                error.textContent = data.error || 'Erreur lors de la génération.';
+                error.style.display = 'block';
+            }
+        } catch (e) {
+            error.textContent = 'Erreur réseau : ' + e.message;
+            error.style.display = 'block';
+        } finally {
+            loading.style.display = 'none';
+            buttons.forEach(b => b.disabled = false);
+        }
+    }
+
+    function copyAiReply() {
+        const text = document.getElementById('ai-reply-text').textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = document.querySelector('.ai-copy-btn');
+            const old = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+            setTimeout(() => { btn.innerHTML = old; }, 1500);
+        });
+    }
 </script>
 @endsection

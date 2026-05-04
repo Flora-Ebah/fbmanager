@@ -32,6 +32,7 @@ Route::middleware(['auth', \App\Http\Middleware\AutoImportFacebook::class])->gro
     // AI - Generation de reponses
     Route::post('/ai/suggest-reply', [AiController::class, 'suggestReply'])->name('ai.suggest');
     Route::post('/ai/suggest-multiple', [AiController::class, 'suggestMultipleReplies'])->name('ai.suggest-multiple');
+    Route::post('/ai/suggest-messenger', [AiController::class, 'suggestMessengerReply'])->name('ai.suggest-messenger');
 
     // Messenger
     Route::get('/messenger', [MessengerController::class, 'index'])->name('messenger.index');
