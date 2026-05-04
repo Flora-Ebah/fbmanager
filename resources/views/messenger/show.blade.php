@@ -253,7 +253,7 @@
         function renderMessage(msg, pageId) {
             const isPage = msg.nom_expediteur && (msg.nom_expediteur.toLowerCase().includes('sodeci') || msg.statut === 'lu');
             const cls = isPage ? 'is-page' : 'is-user';
-            const time = msg.temps_envoi ? new Date(msg.temps_envoi).toLocaleString('fr-FR', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'}) : '';
+            const time = msg.temps_envoi ? new Date(msg.temps_envoi).toLocaleString('fr-FR', {day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'}) : '';
             const initials = (msg.nom_expediteur || '?').substring(0,2).toUpperCase();
             const colors = ['#3B82F6','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899'];
             const c = colors[Math.abs(hashCode(msg.nom_expediteur || '?')) % colors.length];

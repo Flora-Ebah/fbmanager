@@ -13,7 +13,7 @@
     $color = $colors[abs(crc32($msg->nom_expediteur ?? '?')) % count($colors)];
 
     try {
-        $time = $msg->temps_envoi ? \Carbon\Carbon::parse($msg->temps_envoi)->format('d M H:i') : '';
+        $time = $msg->temps_envoi ? \Carbon\Carbon::parse($msg->temps_envoi)->format('d M Y, H:i') : '';
     } catch (\Exception $e) { $time = $msg->temps_envoi ?? ''; }
 @endphp
 
