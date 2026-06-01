@@ -41,9 +41,21 @@ class ImportController extends Controller
     {
         Log::channel('single')->info("[MANUAL-IMPORT] Demande {$type}");
 
+        // Reset ancienne progression
+        Cache::forget("{$type}_progress");
+        Cache::forget("{$type}_last_finished_at");
+
         // Marquer le debut
         Cache::put("{$type}_running", true, 3600);
         Cache::put("{$type}_started_at", now()->toDateTimeString(), 3600);
+
+        // Init progress vide pour eviter les false-positives
+        Cache::put("{$type}_progress", [
+            'total' => 0,
+            'current' => 0,
+            'current_message' => 'Initialisation...',
+            'finished' => false,
+        ], 3600);
 
         // Renvoyer la reponse au client AVANT de lancer l'import
         // pour que le navigateur ne reste pas en attente
