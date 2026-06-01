@@ -44,6 +44,7 @@
 <script>
 let importPollTimer = null;
 let importType = null;
+let importFinished = false;
 
 async function triggerImport(type) {
     importType = type;
@@ -120,10 +121,14 @@ async function pollStatus(type) {
             if (p.finished) {
                 clearInterval(importPollTimer);
                 importPollTimer = null;
+                importFinished = true;
                 document.getElementById('import-modal-icon').innerHTML = '<i class="fa-solid fa-check"></i>';
                 document.getElementById('import-modal-icon').style.background = 'linear-gradient(135deg, #10B981, #059669)';
-                document.getElementById('import-modal-subtitle').textContent = 'Import terminé avec succès !';
+                document.getElementById('import-modal-subtitle').textContent = 'Import terminé ! La page va se rafraîchir...';
                 document.getElementById('import-modal-close').style.display = 'inline-flex';
+                document.getElementById('import-modal-close').textContent = 'Voir les résultats';
+                // Auto-refresh dans 3 secondes
+                setTimeout(() => window.location.reload(), 3000);
             }
         } else if (!data.running) {
             // Pas encore commencé ou cache vidé
@@ -140,6 +145,10 @@ function hideImportModal() {
 }
 
 function closeImportModal() {
+    if (importFinished) {
+        window.location.reload();
+        return;
+    }
     document.getElementById('import-modal').style.display = 'none';
     if (importPollTimer) {
         clearInterval(importPollTimer);
