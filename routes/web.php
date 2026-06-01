@@ -38,6 +38,7 @@ Route::middleware(['auth', \App\Http\Middleware\AutoImportFacebook::class])->gro
     // Imports manuels (trigger en arriere-plan)
     Route::post('/import/facebook', [ImportController::class, 'facebook'])->name('import.facebook');
     Route::post('/import/messenger', [ImportController::class, 'messenger'])->name('import.messenger');
+    Route::get('/import/status/{type}', [ImportController::class, 'status'])->name('import.status');
 
     // Messenger
     Route::get('/messenger', [MessengerController::class, 'index'])->name('messenger.index');

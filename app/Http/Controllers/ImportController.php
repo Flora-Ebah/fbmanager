@@ -18,6 +18,25 @@ class ImportController extends Controller
         return $this->launch('messenger');
     }
 
+    public function status(string $type)
+    {
+        if (!in_array($type, ['facebook', 'messenger'])) {
+            return response()->json(['error' => 'Type invalide'], 400);
+        }
+
+        $progress = Cache::get("{$type}_progress");
+        $running = Cache::has("{$type}_running");
+        $startedAt = Cache::get("{$type}_started_at");
+        $finishedAt = Cache::get("{$type}_last_finished_at");
+
+        return response()->json([
+            'running' => $running,
+            'started_at' => $startedAt,
+            'finished_at' => $finishedAt,
+            'progress' => $progress,
+        ]);
+    }
+
     protected function launch(string $type)
     {
         Log::channel('single')->info("[MANUAL-IMPORT] Demande {$type}");

@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\Models\Commentaire;
 use App\Services\FacebookService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class ImportFacebook extends Command
@@ -64,13 +65,28 @@ class ImportFacebook extends Command
         $postsUpdated = 0;
         $commentsCreated = 0;
         $commentsTotal = 0;
+        $errors = 0;
+        $totalPosts = count($posts);
+        $currentIndex = 0;
 
-        $bar = $this->output->createProgressBar(count($posts));
+        $bar = $this->output->createProgressBar($totalPosts);
         $bar->start();
 
-        $errors = 0;
+        // Init progression cache
+        Cache::put('facebook_progress', [
+            'total' => $totalPosts,
+            'current' => 0,
+            'posts_created' => 0,
+            'posts_updated' => 0,
+            'comments_total' => 0,
+            'comments_created' => 0,
+            'errors' => 0,
+            'current_message' => 'Démarrage...',
+            'finished' => false,
+        ], 3600);
 
         foreach ($posts as $fbPost) {
+            $currentIndex++;
             $postId = $fbPost['id'] ?? null;
             if (!$postId) {
                 $bar->advance();
@@ -124,8 +140,34 @@ class ImportFacebook extends Command
                 $this->warn("  Erreur post {$postId}: " . $e->getMessage());
             }
 
+            // Update progress cache
+            Cache::put('facebook_progress', [
+                'total' => $totalPosts,
+                'current' => $currentIndex,
+                'posts_created' => $postsCreated,
+                'posts_updated' => $postsUpdated,
+                'comments_total' => $commentsTotal,
+                'comments_created' => $commentsCreated,
+                'errors' => $errors,
+                'current_message' => "Post {$currentIndex}/{$totalPosts} traité",
+                'finished' => false,
+            ], 3600);
+
             $bar->advance();
         }
+
+        // Marquer comme termine
+        Cache::put('facebook_progress', [
+            'total' => $totalPosts,
+            'current' => $totalPosts,
+            'posts_created' => $postsCreated,
+            'posts_updated' => $postsUpdated,
+            'comments_total' => $commentsTotal,
+            'comments_created' => $commentsCreated,
+            'errors' => $errors,
+            'current_message' => 'Import terminé !',
+            'finished' => true,
+        ], 3600);
 
         $bar->finish();
         $this->newLine(2);

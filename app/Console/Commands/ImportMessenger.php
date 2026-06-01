@@ -6,6 +6,7 @@ use App\Models\MessengerConversation;
 use App\Models\MessengerMessage;
 use App\Services\FacebookService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -45,11 +46,26 @@ class ImportMessenger extends Command
         $messagesCreated = 0;
         $messagesTotal = 0;
         $errors = 0;
+        $totalConvos = count($conversations);
+        $currentIndex = 0;
 
-        $bar = $this->output->createProgressBar(count($conversations));
+        $bar = $this->output->createProgressBar($totalConvos);
         $bar->start();
 
+        Cache::put('messenger_progress', [
+            'total' => $totalConvos,
+            'current' => 0,
+            'convos_created' => 0,
+            'convos_updated' => 0,
+            'messages_total' => 0,
+            'messages_created' => 0,
+            'errors' => 0,
+            'current_message' => 'Démarrage...',
+            'finished' => false,
+        ], 3600);
+
         foreach ($conversations as $conv) {
+            $currentIndex++;
             $convId = $conv['id'] ?? null;
             if (!$convId) {
                 $bar->advance();
@@ -114,8 +130,32 @@ class ImportMessenger extends Command
                 }
             }
 
+            Cache::put('messenger_progress', [
+                'total' => $totalConvos,
+                'current' => $currentIndex,
+                'convos_created' => $convosCreated,
+                'convos_updated' => $convosUpdated,
+                'messages_total' => $messagesTotal,
+                'messages_created' => $messagesCreated,
+                'errors' => $errors,
+                'current_message' => "Conversation {$currentIndex}/{$totalConvos} traitée",
+                'finished' => false,
+            ], 3600);
+
             $bar->advance();
         }
+
+        Cache::put('messenger_progress', [
+            'total' => $totalConvos,
+            'current' => $totalConvos,
+            'convos_created' => $convosCreated,
+            'convos_updated' => $convosUpdated,
+            'messages_total' => $messagesTotal,
+            'messages_created' => $messagesCreated,
+            'errors' => $errors,
+            'current_message' => 'Import terminé !',
+            'finished' => true,
+        ], 3600);
 
         $bar->finish();
         $this->newLine(2);
