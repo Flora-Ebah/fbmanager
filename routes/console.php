@@ -15,14 +15,14 @@ Artisan::command('inspire', function () {
 // ═══════════════════════════════════════════════════════════════
 
 // Sync incrementale rapide (seulement les nouveautes) toutes les minutes
+// Pas de withoutOverlapping: les imports incrementaux sont rapides (~10s)
+// et le mutex pose probleme sur l'hebergement mutualise hosting.fr
 Schedule::command('import:facebook --incremental')
     ->everyMinute()
-    ->withoutOverlapping(5) // Lock de 5 min max (au cas ou blocage)
     ->runInBackground();
 
 Schedule::command('import:messenger --incremental')
     ->everyMinute()
-    ->withoutOverlapping(5)
     ->runInBackground();
 
 // Sync complete (full refresh) toutes les 6 heures - rattrape ce qui aurait ete rate
