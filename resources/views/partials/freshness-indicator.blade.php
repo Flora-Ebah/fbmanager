@@ -31,13 +31,13 @@
                 pill.classList.remove('is-syncing', 'is-stale');
                 if (data.running) {
                     pill.classList.add('is-syncing');
-                    pillText.innerHTML = '<strong>Synchronisation en cours</strong>';
+                    pillText.innerHTML = '<strong>Synchronisation en cours...</strong>';
                 } else if (data.last_sync) {
                     const sec = Math.floor((Date.now() - new Date(data.last_sync.replace(' ', 'T')).getTime()) / 1000);
                     if (sec > 300) pill.classList.add('is-stale');
-                    pillText.innerHTML = 'Mis à jour <strong>' + formatAgo(data.last_sync) + '</strong>';
+                    pillText.innerHTML = 'Synchronisation automatique <strong>' + formatAgo(data.last_sync) + '</strong>';
                 } else {
-                    pillText.innerHTML = 'En attente...';
+                    pillText.innerHTML = 'En attente de synchronisation...';
                 }
             }
 
