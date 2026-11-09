@@ -168,7 +168,35 @@
             box-shadow: var(--shadow-md);
         }
 
-        /* Freshness mini pill in sidebar */
+        /* New items button in sidebar (apparait quand il y en a) */
+        .sidebar-new-items {
+            display: none;
+            margin: 10px 14px 0;
+            padding: 10px 12px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #fff;
+            border-radius: var(--radius);
+            font-size: 12px;
+            font-weight: 600;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            text-align: left;
+            border: none;
+            width: calc(100% - 28px);
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+            animation: bellShake 0.6s ease;
+        }
+        .sidebar-new-items.is-visible { display: flex; }
+        .sidebar-new-items i { font-size: 14px; }
+        .sidebar-new-items:hover { background: linear-gradient(135deg, #f59e0b, #d97706); transform: translateY(-1px); }
+        @keyframes bellShake {
+            0%, 100% { transform: rotate(0); }
+            20%, 60% { transform: rotate(-8deg); }
+            40%, 80% { transform: rotate(8deg); }
+        }
+
+        /* Freshness pill in sidebar */
         .sidebar-fresh {
             margin: 10px 14px 0;
             padding: 10px 12px;
@@ -176,14 +204,14 @@
             border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: var(--radius);
             font-size: 11px;
-            color: rgba(255, 255, 255, 0.9);
+            color: rgba(255, 255, 255, 0.95);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 9px;
         }
         .sidebar-fresh__dot {
-            width: 7px;
-            height: 7px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background: #4ade80;
             flex-shrink: 0;
@@ -194,7 +222,16 @@
             animation: pulse 1.2s infinite;
         }
         .sidebar-fresh.is-stale .sidebar-fresh__dot { background: #f87171; }
-        .sidebar-fresh__label { font-weight: 500; }
+        .sidebar-fresh__content { flex: 1; min-width: 0; line-height: 1.3; }
+        .sidebar-fresh__title {
+            display: block;
+            font-size: 10px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .sidebar-fresh__value { display: block; font-size: 12px; font-weight: 600; color: #fff; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
         /* Sidebar footer : user card */
@@ -685,10 +722,19 @@
                 @endif
             </nav>
 
-            {{-- Freshness pill --}}
-            <div class="sidebar-fresh" id="sidebar-fresh" title="Dernière synchronisation">
+            {{-- Nouveau: notification nouveautés (si il y en a) --}}
+            <button type="button" class="sidebar-new-items" id="sidebar-new-items" onclick="window.location.reload()">
+                <i class="fa-solid fa-bell"></i>
+                <span id="sidebar-new-items-text">Nouveautés</span>
+            </button>
+
+            {{-- Freshness --}}
+            <div class="sidebar-fresh" id="sidebar-fresh" title="Dernière synchronisation automatique">
                 <span class="sidebar-fresh__dot"></span>
-                <span class="sidebar-fresh__label" id="sidebar-fresh-label">Synchronisé</span>
+                <div class="sidebar-fresh__content">
+                    <span class="sidebar-fresh__title">Synchronisé</span>
+                    <span class="sidebar-fresh__value" id="sidebar-fresh-label">à l'instant</span>
+                </div>
             </div>
 
             <div class="icon-sidebar__footer">
