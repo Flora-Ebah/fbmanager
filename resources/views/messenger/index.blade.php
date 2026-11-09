@@ -19,6 +19,7 @@
 </div>
 
 @include('partials.import-modal')
+@include('partials.freshness-indicator')
 
 <div class="msg-list-wrapper">
     @if($conversations->count() > 0)

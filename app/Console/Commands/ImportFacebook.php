@@ -14,6 +14,7 @@ class ImportFacebook extends Command
     protected $signature = 'import:facebook
                             {--fresh : Vider les tables posts/commentaires avant import}
                             {--limit=100 : Nombre max de posts a recuperer}
+                            {--incremental : Mode rapide (seulement les nouveautes depuis la derniere sync)}
                             {--test : Tester la connexion uniquement}';
 
     protected $description = 'Importer les posts et commentaires directement depuis l\'API Facebook Graph';
@@ -40,6 +41,7 @@ class ImportFacebook extends Command
         }
 
         $limit = (int) $this->option('limit');
+        $incremental = (bool) $this->option('incremental');
 
         // Option --fresh
         if ($this->option('fresh')) {
@@ -48,6 +50,11 @@ class ImportFacebook extends Command
             Commentaire::truncate();
             Post::truncate();
             DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        }
+
+        // Mode incremental : limiter aux 15 posts les plus recents
+        if ($incremental) {
+            $limit = 15;
         }
 
         // ─── Etape 1 : Recuperer les posts ───
@@ -112,7 +119,17 @@ class ImportFacebook extends Command
                 }
 
                 // ─── Etape 2 : Recuperer les commentaires de ce post ───
-                $comments = $fb->getPostComments($postId);
+                // En mode incremental, ne demander que les commentaires depuis la derniere sync
+                $sinceTimestamp = null;
+                if ($incremental) {
+                    $lastComment = Commentaire::where('post_id', $postId)
+                        ->orderBy('temps_creer', 'desc')
+                        ->first();
+                    if ($lastComment && $lastComment->temps_creer) {
+                        $sinceTimestamp = strtotime($lastComment->temps_creer);
+                    }
+                }
+                $comments = $fb->getPostComments($postId, 500, $sinceTimestamp);
                 $commentsTotal += count($comments);
 
                 foreach ($comments as $fbComment) {

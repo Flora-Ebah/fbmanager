@@ -19,6 +19,7 @@
 </div>
 
 @include('partials.import-modal')
+@include('partials.freshness-indicator')
 
 @if($posts->count() > 0)
     <div class="post-grid">

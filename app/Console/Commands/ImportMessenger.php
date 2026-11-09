@@ -14,7 +14,8 @@ class ImportMessenger extends Command
 {
     protected $signature = 'import:messenger
                             {--fresh : Vider les tables messenger avant import}
-                            {--limit=100 : Nombre max de conversations a recuperer}';
+                            {--limit=100 : Nombre max de conversations a recuperer}
+                            {--incremental : Mode rapide (seulement les conversations mises a jour)}';
 
     protected $description = 'Importer les conversations et messages Messenger depuis Facebook';
 
@@ -22,6 +23,7 @@ class ImportMessenger extends Command
     {
         $fb = new FacebookService();
         $limit = (int) $this->option('limit');
+        $incremental = (bool) $this->option('incremental');
 
         if ($this->option('fresh')) {
             $this->warn('Vidage des tables messenger...');
@@ -29,6 +31,11 @@ class ImportMessenger extends Command
             MessengerMessage::truncate();
             MessengerConversation::truncate();
             DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        }
+
+        // Mode incremental : ne recuperer que les 15 conversations les plus recentes
+        if ($incremental) {
+            $limit = 15;
         }
 
         $this->info("Recuperation des conversations (max {$limit})...");
@@ -70,6 +77,19 @@ class ImportMessenger extends Command
             if (!$convId) {
                 $bar->advance();
                 continue;
+            }
+
+            // Mode incremental : skip si la conversation n'a pas ete mise a jour depuis notre dernier import
+            if ($incremental) {
+                $existingConvo = MessengerConversation::where('conversation_id', $convId)->first();
+                if ($existingConvo && $existingConvo->temps_dernier_message) {
+                    $existingUpdated = strtotime($existingConvo->temps_dernier_message);
+                    $fbUpdated = strtotime($conv['updated_time'] ?? 'now');
+                    if ($fbUpdated <= $existingUpdated) {
+                        $bar->advance();
+                        continue;
+                    }
+                }
             }
 
             // Determiner le nom de l'expediteur (le participant qui n'est pas la page)

@@ -65,7 +65,7 @@ class FacebookService
     /**
      * Recuperer les commentaires d'un post avec pagination
      */
-    public function getPostComments(string $postId, int $limit = 500): array
+    public function getPostComments(string $postId, int $limit = 500, ?int $sinceTimestamp = null): array
     {
         $allComments = [];
         $url = "{$this->baseUrl}/{$postId}/comments";
@@ -76,6 +76,11 @@ class FacebookService
             'limit' => min($limit, 100),
             'order' => 'reverse_chronological',
         ];
+
+        // Mode incremental : ne recuperer que les commentaires apres un certain timestamp
+        if ($sinceTimestamp) {
+            $params['since'] = $sinceTimestamp;
+        }
 
         do {
             $response = $this->requestWithRetry($url, $params);

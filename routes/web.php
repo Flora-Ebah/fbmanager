@@ -24,8 +24,8 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-// Authenticated routes
-Route::middleware(['auth', \App\Http\Middleware\AutoImportFacebook::class])->group(function () {
+// Authenticated routes (sync gere par cron, plus besoin du middleware AutoImportFacebook)
+Route::middleware(['auth'])->group(function () {
     // Posts & Comments
     Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
     Route::get('/posts/{postId}', [PostController::class, 'show'])->name('posts.show');
@@ -39,6 +39,7 @@ Route::middleware(['auth', \App\Http\Middleware\AutoImportFacebook::class])->gro
     Route::post('/import/facebook', [ImportController::class, 'facebook'])->name('import.facebook');
     Route::post('/import/messenger', [ImportController::class, 'messenger'])->name('import.messenger');
     Route::get('/import/status/{type}', [ImportController::class, 'status'])->name('import.status');
+    Route::get('/import/freshness/{type}', [ImportController::class, 'freshness'])->name('import.freshness');
 
     // Messenger
     Route::get('/messenger', [MessengerController::class, 'index'])->name('messenger.index');
