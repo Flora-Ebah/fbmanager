@@ -14,6 +14,31 @@ Route::get('/', fn () => redirect('/posts'));
 // Privacy policy (public, required for Facebook App Review)
 Route::get('/privacy', fn () => view('privacy'))->name('privacy');
 
+// External cron trigger (cron-job.org, uptimerobot, etc.)
+// Usage: GET /cron/run?token=XXX
+Route::get('/cron/run', function (\Illuminate\Http\Request $request) {
+    $expectedToken = env('CRON_TOKEN', '95d9c9022831d9d05458bc0bbe4343ce');
+    if ($request->get('token') !== $expectedToken) {
+        return response('Unauthorized', 401);
+    }
+
+    // Fermer la connexion au client tout de suite, lancer la synchro en fond
+    $response = response()->json(['ok' => true, 'at' => now()->toDateTimeString()]);
+    $response->send();
+    if (function_exists('fastcgi_finish_request')) { fastcgi_finish_request(); }
+    @set_time_limit(0);
+    @ignore_user_abort(true);
+
+    try {
+        \Illuminate\Support\Facades\Artisan::call('import:facebook', ['--incremental' => true]);
+        \Illuminate\Support\Facades\Artisan::call('import:messenger', ['--incremental' => true]);
+    } catch (\Throwable $e) {
+        \Illuminate\Support\Facades\Log::error('[CRON-HTTP] ' . $e->getMessage());
+    }
+
+    return $response;
+});
+
 // Auth routes
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
