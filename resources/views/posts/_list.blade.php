@@ -47,22 +47,6 @@
 
 <style>
 .list-col__pagination { margin-top: 10px; }
-.pagination-compact {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    color: var(--text-secondary);
-    white-space: nowrap;
-    flex-wrap: nowrap;
-    overflow: hidden;
-    width: 100%;
-    background: var(--surface-subtle);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 6px 10px;
-}
-.pagination-compact .pg-range { margin-left: auto; }
 .pagination-compact .pg-btn {
     display: inline-flex;
     align-items: center;
