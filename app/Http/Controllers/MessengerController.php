@@ -8,17 +8,8 @@ class MessengerController extends Controller
 {
     public function index(Request $request)
     {
-        $search = $request->get('search');
-
-        $conversations = MessengerConversation::withCount('messages')
-            ->when($search, function ($q) use ($search) {
-                $q->where('nom_expediteur', 'like', "%{$search}%")
-                  ->orWhere('dernier_message', 'like', "%{$search}%");
-            })
-            ->orderByRaw('COALESCE(temps_dernier_message, updated_at) DESC')
-            ->paginate(30);
-
-        return view('messenger.index', compact('conversations', 'search'));
+        $conversations = $this->getConversationsList($request);
+        return view('messenger.index', compact('conversations') + ['search' => $request->get('search')]);
     }
 
     public function show(Request $request, $conversationId)
@@ -52,6 +43,22 @@ class MessengerController extends Controller
         $hasMore = $conversation->messages()->count() > 30;
         $pageId = config('fbmanager.facebook_page_id');
 
-        return view('messenger.show', compact('conversation', 'messages', 'hasMore', 'pageId'));
+        // Liste des conversations pour la colonne de gauche
+        $conversations = $this->getConversationsList($request);
+
+        return view('messenger.show', compact('conversation', 'messages', 'hasMore', 'pageId', 'conversations') + ['search' => $request->get('search')]);
+    }
+
+    protected function getConversationsList(Request $request)
+    {
+        $search = $request->get('search');
+
+        return MessengerConversation::withCount('messages')
+            ->when($search, function ($q) use ($search) {
+                $q->where('nom_expediteur', 'like', "%{$search}%")
+                  ->orWhere('dernier_message', 'like', "%{$search}%");
+            })
+            ->orderByRaw('COALESCE(temps_dernier_message, updated_at) DESC')
+            ->paginate(50);
     }
 }

@@ -1,254 +1,330 @@
 @extends('layouts.app')
 @section('title', 'Post #' . Str::limit($post->post_id, 15))
 
-@section('content')
-<div class="page-header">
-    <h1><i class="fa-solid fa-newspaper"></i> Détail du Post</h1>
-    <a href="/posts" class="btn btn-secondary btn-sm"><i class="fa-solid fa-arrow-left"></i> Retour aux posts</a>
-</div>
+@section('main')
+@include('posts._list')
 
-<div class="card" style="margin-bottom: 25px;">
-    <div class="card-header">
-        Post #{{ Str::limit($post->post_id, 30) }}
-    </div>
-    <div class="card-body">
-        @if($post->image_url)
-            <img src="{{ $post->image_url }}" alt="Image du post" style="width:100%; max-height:400px; object-fit:cover; border-radius: var(--radius); margin-bottom: 16px;">
-        @endif
-        <p style="font-size: 16px; line-height: 1.7; margin-bottom: 16px;">{{ $post->message_post ?? 'Aucun contenu' }}</p>
-        <div style="display:flex; gap:20px; flex-wrap:wrap; font-family:'Outfit',sans-serif; font-size:18px; color:#888;">
-            <span><i class="fa-regular fa-calendar"></i> {{ $post->temps_creer_post ?? '—' }}</span>
+<main class="content is-visible-mobile">
+    <div class="top-bar">
+        <div class="top-bar__title">
+            <a href="/posts" class="btn btn-ghost btn-icon btn-sm" style="margin-right:4px;" title="Retour"><i class="fa-solid fa-arrow-left"></i></a>
+            <i class="fa-solid fa-newspaper" style="color:var(--bleu-france);"></i>
+            Publication
+            <span class="breadcrumb">· {{ $commentaires->total() }} commentaire(s)</span>
+        </div>
+        <div class="top-bar__actions">
             @if($post->lien)
-                <a href="{{ $post->lien }}" target="_blank" style="color: var(--bleu-france);"><i class="fa-solid fa-arrow-up-right-from-square"></i> Voir sur Facebook</a>
+                <a href="{{ $post->lien }}" target="_blank" class="btn btn-secondary btn-sm">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Voir sur Facebook
+                </a>
             @endif
         </div>
     </div>
-</div>
 
-<div class="card">
-    <div class="card-header">
-        <i class="fa-solid fa-comments"></i> Commentaires ({{ $commentaires->total() }})
-    </div>
-    @if($commentaires->count() > 0)
-        @foreach($commentaires as $c)
-        @php $hasReplies = $c->aiReplies->count() > 0; @endphp
-        <div class="comment-item">
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;">
-                <div style="flex:1; min-width:0;">
-                    <div class="comment-author"><i class="fa-solid fa-user"></i> {{ $c->nom_auteur ?? 'Anonyme' }}</div>
-                    <div class="comment-text">{{ $c->message_commentaire }}</div>
-                    <div class="comment-date"><i class="fa-regular fa-clock"></i> {{ $c->temps_creer ?? '—' }}</div>
+    <div class="content-full">
+        <div class="content-full__inner">
+            {{-- ─── POST ─── --}}
+            <article class="post-detail">
+                @if($post->image_url)
+                    <img src="{{ $post->image_url }}" alt="" class="post-detail__image" onerror="this.style.display='none'">
+                @endif
+                <div class="post-detail__body">
+                    <p class="post-detail__text">{{ $post->message_post ?? 'Aucun contenu' }}</p>
+                    <div class="post-detail__meta">
+                        @php
+                            try { $t = \Carbon\Carbon::parse($post->temps_creer_post)->format('d M Y, H:i'); } catch(\Throwable $e) { $t = '—'; }
+                        @endphp
+                        <span><i class="fa-regular fa-calendar"></i> {{ $t }}</span>
+                    </div>
                 </div>
-                <div style="flex-shrink:0; display:flex; gap:6px; align-items:center;">
-                    @if($hasReplies)
-                        <span class="badge-ai-done" title="Réponse deja generee"><i class="fa-solid fa-check-circle"></i> {{ $c->aiReplies->count() }} réponse(s)</span>
-                    @endif
-                    <button type="button" class="btn btn-primary btn-sm" onclick="generateReply('{{ $c->id_commentaire }}', this)">
-                        <i class="fa-solid fa-robot"></i> {{ $hasReplies ? 'Regenerer' : 'Generer réponse IA' }}
-                    </button>
-                </div>
-            </div>
+            </article>
 
-            {{-- Historique des réponses deja generees --}}
-            @if($hasReplies)
-            @php
-                $proReplies = $c->aiReplies->where('tone', 'professional');
-                $friendlyReplies = $c->aiReplies->where('tone', 'friendly');
-                $casualReplies = $c->aiReplies->where('tone', 'casual');
-            @endphp
-            <div class="ai-history" style="margin-top:10px;">
-                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="toggleHistory('{{ $c->id_commentaire }}')" style="font-size:14px;">
-                        <i class="fa-solid fa-clock-rotate-left"></i> Historique ({{ $c->aiReplies->count() }})
-                    </button>
-                    <div id="ai-history-tabs-{{ $c->id_commentaire }}" class="history-tabs" style="display:none;">
-                        @if($proReplies->count() > 0)
-                        <button type="button" class="history-tab history-tab-active" onclick="switchHistoryTab('{{ $c->id_commentaire }}', 'pro', this)">
-                            <i class="fa-solid fa-briefcase"></i> Pro ({{ $proReplies->count() }})
-                        </button>
-                        @endif
-                        @if($friendlyReplies->count() > 0)
-                        <button type="button" class="history-tab" onclick="switchHistoryTab('{{ $c->id_commentaire }}', 'friendly', this)">
-                            <i class="fa-solid fa-face-smile"></i> Amical ({{ $friendlyReplies->count() }})
-                        </button>
-                        @endif
-                        @if($casualReplies->count() > 0)
-                        <button type="button" class="history-tab" onclick="switchHistoryTab('{{ $c->id_commentaire }}', 'casual', this)">
-                            <i class="fa-solid fa-comments"></i> Decontracte ({{ $casualReplies->count() }})
-                        </button>
-                        @endif
+            {{-- ─── COMMENTAIRES ─── --}}
+            <h2 class="section-title">
+                <i class="fa-regular fa-comment"></i> Commentaires
+                <span class="section-title__count">{{ $commentaires->total() }}</span>
+            </h2>
+
+            @if($commentaires->count() > 0)
+                <div class="comments-list">
+                    @foreach($commentaires as $c)
+                    @php
+                        $hasReplies = $c->aiReplies->count() > 0;
+                        $initials = strtoupper(substr($c->nom_auteur ?? '?', 0, 2));
+                        $colors = ['#3B82F6','#10B981','#F59E0B','#EF4444','#8B5CF6','#EC4899','#14B8A6','#F97316'];
+                        $color = $colors[abs(crc32($c->nom_auteur ?? '?')) % count($colors)];
+                        try { $time = \Carbon\Carbon::parse($c->temps_creer)->format('d M Y, H:i'); } catch(\Throwable $e) { $time = $c->temps_creer ?? '—'; }
+                    @endphp
+                    <div class="comment">
+                        <div class="comment__avatar" style="background:{{ $color }}">{{ $initials }}</div>
+                        <div class="comment__body">
+                            <div class="comment__head">
+                                <div>
+                                    <span class="comment__author">{{ $c->nom_auteur ?? 'Utilisateur Facebook' }}</span>
+                                    <span class="comment__time">· {{ $time }}</span>
+                                </div>
+                                <div class="comment__actions">
+                                    @if($hasReplies)
+                                        <button type="button" class="btn btn-ghost btn-sm" onclick="toggleHistory('{{ $c->id_commentaire }}')">
+                                            <i class="fa-solid fa-clock-rotate-left"></i> Historique ({{ $c->aiReplies->count() }})
+                                        </button>
+                                    @endif
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="generateReply('{{ $c->id_commentaire }}', this)">
+                                        <i class="fa-solid fa-robot"></i> {{ $hasReplies ? 'Régénérer' : 'Répondre avec IA' }}
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="comment__text">{{ $c->message_commentaire }}</div>
+
+                            {{-- Panel réponse IA --}}
+                            <div id="ai-panel-{{ $c->id_commentaire }}" class="ai-panel" style="display:none;">
+                                <div class="ai-panel__head">
+                                    <div class="ai-panel__title"><i class="fa-solid fa-robot"></i> Suggestion IA</div>
+                                    <div class="tone-selector">
+                                        <button type="button" class="tone-btn tone-active" onclick="changeTone('{{ $c->id_commentaire }}', 'professional', this)">Pro</button>
+                                        <button type="button" class="tone-btn" onclick="changeTone('{{ $c->id_commentaire }}', 'friendly', this)">Amical</button>
+                                        <button type="button" class="tone-btn" onclick="changeTone('{{ $c->id_commentaire }}', 'casual', this)">Décontracté</button>
+                                    </div>
+                                </div>
+                                <div id="ai-loading-{{ $c->id_commentaire }}" class="ai-loading" style="display:none;">
+                                    <i class="fa-solid fa-spinner fa-spin"></i> Génération en cours...
+                                </div>
+                                <div id="ai-result-{{ $c->id_commentaire }}" style="display:none;">
+                                    <div id="ai-text-{{ $c->id_commentaire }}" class="ai-text"></div>
+                                    <div class="ai-actions">
+                                        <button type="button" class="btn btn-success btn-sm" onclick="copyReply('{{ $c->id_commentaire }}')">
+                                            <i class="fa-solid fa-copy"></i> Copier
+                                        </button>
+                                        <button type="button" class="btn btn-secondary btn-sm" onclick="generateReply('{{ $c->id_commentaire }}', null)">
+                                            <i class="fa-solid fa-rotate"></i> Régénérer
+                                        </button>
+                                        <button type="button" class="btn btn-ghost btn-sm" onclick="closePanel('{{ $c->id_commentaire }}')">
+                                            <i class="fa-solid fa-xmark"></i> Fermer
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="ai-error-{{ $c->id_commentaire }}" class="ai-error" style="display:none;"></div>
+                            </div>
+
+                            {{-- Historique --}}
+                            @if($hasReplies)
+                            <div id="ai-history-{{ $c->id_commentaire }}" class="ai-history" style="display:none;">
+                                @foreach($c->aiReplies as $r)
+                                <div class="ai-history__item">
+                                    <div class="ai-history__meta">
+                                        <span class="badge badge-user">{{ strtoupper($r->tone) }}</span>
+                                        <span>{{ $r->user->username ?? '?' }} · {{ $r->created_at->format('d/m/Y H:i') }}</span>
+                                    </div>
+                                    <div class="ai-history__text">{{ $r->reply }}</div>
+                                    <button type="button" class="btn btn-ghost btn-sm" onclick="copyText(this)" data-text="{{ addslashes($r->reply) }}">
+                                        <i class="fa-solid fa-copy"></i> Copier
+                                    </button>
+                                </div>
+                                @endforeach
+                            </div>
+                            @endif
+                        </div>
                     </div>
+                    @endforeach
                 </div>
-                <div id="ai-history-{{ $c->id_commentaire }}" style="display:none; margin-top:8px;">
-                    {{-- Onglet Pro --}}
-                    @if($proReplies->count() > 0)
-                    <div id="ai-history-{{ $c->id_commentaire }}-pro" class="history-panel">
-                        @foreach($proReplies as $r)
-                        <div class="ai-history-item">
-                            <div class="ai-history-meta">
-                                <span style="font-family:'Outfit',sans-serif; font-size:15px; color:#888;">
-                                    <i class="fa-solid fa-user"></i> {{ $r->user->username ?? '?' }} &middot; {{ $r->created_at->format('d/m/Y H:i') }}
-                                </span>
-                            </div>
-                            <div class="ai-history-text">{{ $r->reply }}</div>
-                            <button type="button" class="btn btn-success btn-sm" onclick="copyText(this)" data-text="{{ addslashes($r->reply) }}" style="font-size:13px; margin-top:4px;">
-                                <i class="fa-solid fa-copy"></i> Copier
-                            </button>
-                        </div>
-                        @endforeach
-                    </div>
-                    @endif
-                    {{-- Onglet Amical --}}
-                    @if($friendlyReplies->count() > 0)
-                    <div id="ai-history-{{ $c->id_commentaire }}-friendly" class="history-panel" style="display:none;">
-                        @foreach($friendlyReplies as $r)
-                        <div class="ai-history-item">
-                            <div class="ai-history-meta">
-                                <span style="font-family:'Outfit',sans-serif; font-size:15px; color:#888;">
-                                    <i class="fa-solid fa-user"></i> {{ $r->user->username ?? '?' }} &middot; {{ $r->created_at->format('d/m/Y H:i') }}
-                                </span>
-                            </div>
-                            <div class="ai-history-text">{{ $r->reply }}</div>
-                            <button type="button" class="btn btn-success btn-sm" onclick="copyText(this)" data-text="{{ addslashes($r->reply) }}" style="font-size:13px; margin-top:4px;">
-                                <i class="fa-solid fa-copy"></i> Copier
-                            </button>
-                        </div>
-                        @endforeach
-                    </div>
-                    @endif
-                    {{-- Onglet Decontracte --}}
-                    @if($casualReplies->count() > 0)
-                    <div id="ai-history-{{ $c->id_commentaire }}-casual" class="history-panel" style="display:none;">
-                        @foreach($casualReplies as $r)
-                        <div class="ai-history-item">
-                            <div class="ai-history-meta">
-                                <span style="font-family:'Outfit',sans-serif; font-size:15px; color:#888;">
-                                    <i class="fa-solid fa-user"></i> {{ $r->user->username ?? '?' }} &middot; {{ $r->created_at->format('d/m/Y H:i') }}
-                                </span>
-                            </div>
-                            <div class="ai-history-text">{{ $r->reply }}</div>
-                            <button type="button" class="btn btn-success btn-sm" onclick="copyText(this)" data-text="{{ addslashes($r->reply) }}" style="font-size:13px; margin-top:4px;">
-                                <i class="fa-solid fa-copy"></i> Copier
-                            </button>
-                        </div>
-                        @endforeach
-                    </div>
-                    @endif
+
+                <div class="pagination-wrapper" style="margin-top:20px; border-top:none;">
+                    {{ $commentaires->links() }}
                 </div>
-            </div>
+            @else
+                <div class="empty-state" style="padding:40px;">
+                    <div class="empty-state__icon"><i class="fa-regular fa-comment"></i></div>
+                    <div class="empty-state__title">Aucun commentaire</div>
+                    <div class="empty-state__text">Ce post n'a pas encore de commentaires.</div>
+                </div>
             @endif
-
-            {{-- Panel de nouvelle réponse IA --}}
-            <div id="ai-panel-{{ $c->id_commentaire }}" style="display:none; margin-top:12px; padding:14px; background:#F0F4FF; border-radius:var(--radius); border-top:2px solid var(--bleu-ciel);">
-                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
-                    <span style="font-family:'Outfit',sans-serif; font-size:20px; color:var(--bleu-france);"><i class="fa-solid fa-robot"></i> Réponse IA</span>
-                    <div style="display:flex; gap:6px;">
-                        <button type="button" class="tone-btn tone-active" onclick="changeTone('{{ $c->id_commentaire }}', 'professional', this)">Pro</button>
-                        <button type="button" class="tone-btn" onclick="changeTone('{{ $c->id_commentaire }}', 'friendly', this)">Amical</button>
-                        <button type="button" class="tone-btn" onclick="changeTone('{{ $c->id_commentaire }}', 'casual', this)">Decontracte</button>
-                    </div>
-                </div>
-                <div id="ai-loading-{{ $c->id_commentaire }}" style="display:none; text-align:center; padding:20px; font-family:'Outfit',sans-serif; font-size:20px; color:#888;">
-                    <i class="fa-solid fa-spinner fa-spin"></i> Generation en cours...
-                </div>
-                <div id="ai-result-{{ $c->id_commentaire }}" style="display:none;">
-                    <div id="ai-text-{{ $c->id_commentaire }}" style="font-size:15px; line-height:1.6; padding:12px; background:var(--blanc); border-radius:4px; margin-bottom:10px;"></div>
-                    <div style="display:flex; gap:8px;">
-                        <button type="button" class="btn btn-success btn-sm" onclick="copyReply('{{ $c->id_commentaire }}')">
-                            <i class="fa-solid fa-copy"></i> Copier
-                        </button>
-                        <button type="button" class="btn btn-primary btn-sm" onclick="generateReply('{{ $c->id_commentaire }}', null)">
-                            <i class="fa-solid fa-rotate"></i> Regenerer
-                        </button>
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="closePanel('{{ $c->id_commentaire }}')">
-                            <i class="fa-solid fa-xmark"></i> Fermer
-                        </button>
-                    </div>
-                </div>
-                <div id="ai-error-{{ $c->id_commentaire }}" style="display:none; color:var(--rouge-france); font-family:'Outfit',sans-serif; font-size:18px;"></div>
-            </div>
         </div>
-        @endforeach
-
-        {{ $commentaires->links() }}
-    @else
-        <div class="empty-state">Aucun commentaire pour ce post.</div>
-    @endif
-</div>
+    </div>
+</main>
 
 <style>
-    .tone-btn {
-        font-family: 'Outfit', sans-serif;
+    .post-detail {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        margin-bottom: 24px;
+        box-shadow: var(--shadow-sm);
+    }
+    .post-detail__image {
+        width: 100%;
+        max-height: 400px;
+        object-fit: cover;
+        display: block;
+    }
+    .post-detail__body { padding: 20px 24px; }
+    .post-detail__text {
+        font-size: 15px;
+        line-height: 1.65;
+        color: var(--text-primary);
+        white-space: pre-wrap;
+        margin-bottom: 16px;
+    }
+    .post-detail__meta {
+        display: flex;
+        gap: 16px;
+        font-size: 12px;
+        color: var(--text-muted);
+    }
+
+    .section-title {
+        font-family: 'Sora', sans-serif;
         font-size: 16px;
-        padding: 4px 12px;
-        border: 1px solid var(--bleu-ciel);
-        border-radius: 20px;
-        background: var(--blanc);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+        color: var(--text-primary);
+    }
+    .section-title__count {
+        background: var(--bleu-france-soft);
+        color: var(--bleu-france);
+        padding: 2px 10px;
+        border-radius: var(--radius-full);
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .comments-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .comment {
+        display: flex;
+        gap: 12px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 14px 16px;
+        transition: all var(--duration) var(--ease);
+    }
+    .comment:hover { border-color: var(--border-strong); }
+    .comment__avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 600;
+        font-size: 13px;
+        flex-shrink: 0;
+    }
+    .comment__body { flex: 1; min-width: 0; }
+    .comment__head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 6px;
+        flex-wrap: wrap;
+    }
+    .comment__author { font-weight: 600; font-size: 14px; color: var(--text-primary); }
+    .comment__time { font-size: 12px; color: var(--text-muted); margin-left: 4px; }
+    .comment__actions { display: flex; gap: 6px; flex-wrap: wrap; }
+    .comment__text {
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--text-primary);
+        white-space: pre-wrap;
+    }
+
+    /* AI panel */
+    .ai-panel {
+        margin-top: 12px;
+        background: linear-gradient(135deg, #EFF6FF 0%, #F5F3FF 100%);
+        border: 1px solid #C7D2FE;
+        border-radius: var(--radius);
+        padding: 14px;
+    }
+    .ai-panel__head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .ai-panel__title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--bleu-france);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .tone-selector { display: flex; gap: 4px; }
+    .tone-btn {
+        font-size: 11px;
+        font-weight: 500;
+        padding: 4px 10px;
+        border: 1px solid #C7D2FE;
+        border-radius: var(--radius-full);
+        background: #fff;
         color: var(--bleu-france);
         cursor: pointer;
-        transition: all 0.15s;
+        transition: all var(--duration) var(--ease);
     }
-    .tone-btn:hover { background: var(--bleu-ciel); color: var(--blanc); }
-    .tone-active { background: var(--bleu-france) !important; color: var(--blanc) !important; border-color: var(--bleu-france) !important; }
-
-    .badge-ai-done {
-        font-family: 'Outfit', sans-serif;
-        font-size: 16px;
-        color: var(--vert-ok);
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
+    .tone-btn:hover { background: var(--bleu-france-soft); }
+    .tone-active { background: var(--bleu-france) !important; color: #fff !important; border-color: var(--bleu-france) !important; }
+    .ai-loading { text-align: center; padding: 16px; color: var(--text-secondary); font-size: 13px; }
+    .ai-text {
+        font-size: 14px;
+        line-height: 1.55;
+        padding: 12px 14px;
+        background: #fff;
+        border-radius: var(--radius-sm);
+        margin-bottom: 10px;
+        white-space: pre-wrap;
     }
-
-    .history-tabs {
-        display: inline-flex;
-        gap: 4px;
-        align-items: center;
-    }
-    .history-tab {
-        font-family: 'Outfit', sans-serif;
-        font-size: 15px;
-        padding: 3px 10px;
-        border: 1px solid var(--gris-moyen);
-        border-radius: 4px;
-        background: var(--blanc);
-        color: #666;
-        cursor: pointer;
-        transition: all 0.15s;
-    }
-    .history-tab:hover { background: #f0f0f0; }
-    .history-tab-active {
-        background: var(--bleu-france) !important;
-        color: var(--blanc) !important;
-        border-color: var(--bleu-france) !important;
+    .ai-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+    .ai-error {
+        background: var(--rouge-doux);
+        color: #991B1B;
+        padding: 10px 12px;
+        border-radius: var(--radius-sm);
+        font-size: 13px;
     }
 
-    .ai-history-item {
-        padding: 10px;
+    /* Historique */
+    .ai-history {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px dashed var(--border);
+    }
+    .ai-history__item {
+        padding: 10px 12px;
+        background: var(--surface-subtle);
+        border-radius: var(--radius-sm);
+        border-left: 3px solid var(--bleu-france);
         margin-bottom: 8px;
-        background: #FAFAFA;
-        border-radius: 4px;
-        border-left: 3px solid var(--bleu-ciel);
     }
-    .ai-history-meta {
+    .ai-history__meta {
         display: flex;
         align-items: center;
         gap: 8px;
         margin-bottom: 6px;
+        font-size: 11px;
+        color: var(--text-muted);
     }
-    .ai-history-text {
-        font-size: 14px;
+    .ai-history__text {
+        font-size: 13px;
         line-height: 1.5;
-        color: #555;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+        white-space: pre-wrap;
     }
 
-    .copy-success {
-        animation: copyFlash 0.6s ease;
-    }
-    @keyframes copyFlash {
-        0% { background: var(--vert-doux); }
-        100% { background: var(--blanc); }
-    }
+    .copy-flash { animation: copyFlash 0.6s ease; }
+    @keyframes copyFlash { 0% { background: var(--vert-doux); } 100% { background: #fff; } }
 </style>
 
 <script>
@@ -275,8 +351,8 @@
             },
             body: JSON.stringify({ comment_id: commentId, tone: tone })
         })
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
+        .then(r => r.json())
+        .then(data => {
             loading.style.display = 'none';
             if (data.success) {
                 document.getElementById('ai-text-' + commentId).textContent = data.reply;
@@ -286,36 +362,35 @@
                 error.style.display = 'block';
             }
         })
-        .catch(function(err) {
+        .catch(err => {
             loading.style.display = 'none';
-            error.textContent = 'Erreur de connexion : ' + err.message;
+            error.textContent = 'Erreur réseau : ' + err.message;
             error.style.display = 'block';
         });
     }
 
     function changeTone(commentId, tone, btn) {
         currentTones[commentId] = tone;
-        var btns = btn.parentElement.querySelectorAll('.tone-btn');
-        btns.forEach(function(b) { b.classList.remove('tone-active'); });
+        btn.parentElement.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('tone-active'));
         btn.classList.add('tone-active');
         generateReply(commentId, null);
     }
 
     function copyReply(commentId) {
         var text = document.getElementById('ai-text-' + commentId).textContent;
-        navigator.clipboard.writeText(text).then(function() {
+        navigator.clipboard.writeText(text).then(() => {
             var el = document.getElementById('ai-text-' + commentId);
-            el.classList.add('copy-success');
-            setTimeout(function() { el.classList.remove('copy-success'); }, 700);
+            el.classList.add('copy-flash');
+            setTimeout(() => el.classList.remove('copy-flash'), 700);
         });
     }
 
     function copyText(btn) {
         var text = btn.getAttribute('data-text').replace(/\\'/g, "'");
-        navigator.clipboard.writeText(text).then(function() {
+        navigator.clipboard.writeText(text).then(() => {
             var orig = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-check"></i> Copie !';
-            setTimeout(function() { btn.innerHTML = orig; }, 1000);
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> Copié';
+            setTimeout(() => btn.innerHTML = orig, 1000);
         });
     }
 
@@ -325,25 +400,9 @@
 
     function toggleHistory(commentId) {
         var el = document.getElementById('ai-history-' + commentId);
-        var tabs = document.getElementById('ai-history-tabs-' + commentId);
-        var isHidden = el.style.display === 'none';
-        el.style.display = isHidden ? 'block' : 'none';
-        if (tabs) tabs.style.display = isHidden ? 'inline-flex' : 'none';
-    }
-
-    function switchHistoryTab(commentId, tab, btn) {
-        // Masquer tous les panels
-        var panels = document.querySelectorAll('#ai-history-' + commentId + ' .history-panel');
-        panels.forEach(function(p) { p.style.display = 'none'; });
-
-        // Afficher le panel selectionne
-        var target = document.getElementById('ai-history-' + commentId + '-' + tab);
-        if (target) target.style.display = 'block';
-
-        // Activer le bon onglet
-        var allTabs = btn.parentElement.querySelectorAll('.history-tab');
-        allTabs.forEach(function(t) { t.classList.remove('history-tab-active'); });
-        btn.classList.add('history-tab-active');
+        el.style.display = el.style.display === 'none' ? 'block' : 'none';
     }
 </script>
+
+@include('partials.freshness-indicator')
 @endsection

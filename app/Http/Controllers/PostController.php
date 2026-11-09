@@ -8,22 +8,11 @@ class PostController extends Controller
 {
     public function index(Request $request)
     {
-        $search = $request->get('search');
-
-        $posts = Post::withCount(['commentaires' => function ($q) {
-                $q->whereNotIn('nom_auteur', ['SODECI', 'Sara Conseiller Client Sodeci']);
-            }])
-            ->when($search, function ($q) use ($search) {
-                $q->where('message_post', 'like', "%{$search}%")
-                  ->orWhere('post_id', 'like', "%{$search}%");
-            })
-            ->orderBy('temps_creer_post', 'desc')
-            ->paginate(20);
-
-        return view('posts.index', compact('posts', 'search'));
+        $posts = $this->getPostsList($request);
+        return view('posts.index', compact('posts') + ['search' => $request->get('search')]);
     }
 
-    public function show($postId)
+    public function show(Request $request, $postId)
     {
         $post = Post::where('post_id', $postId)->firstOrFail();
 
@@ -35,6 +24,24 @@ class PostController extends Controller
             ->orderBy('temps_creer', 'desc')
             ->paginate(20);
 
-        return view('posts.show', compact('post', 'commentaires'));
+        // Liste des posts pour la colonne de gauche
+        $posts = $this->getPostsList($request);
+
+        return view('posts.show', compact('post', 'commentaires', 'posts') + ['search' => $request->get('search')]);
+    }
+
+    protected function getPostsList(Request $request)
+    {
+        $search = $request->get('search');
+
+        return Post::withCount(['commentaires' => function ($q) {
+                $q->whereNotIn('nom_auteur', ['SODECI', 'Sara Conseiller Client Sodeci']);
+            }])
+            ->when($search, function ($q) use ($search) {
+                $q->where('message_post', 'like', "%{$search}%")
+                  ->orWhere('post_id', 'like', "%{$search}%");
+            })
+            ->orderBy('temps_creer_post', 'desc')
+            ->paginate(30);
     }
 }

@@ -1,53 +1,30 @@
 @extends('layouts.app')
 @section('title', 'Publications')
 
-@section('content')
-<div class="page-header">
-    <h1><i class="fa-brands fa-facebook"></i> Publications Facebook</h1>
-    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-        <button type="button" id="btn-import-fb" class="btn btn-success btn-sm" onclick="triggerImport('facebook')">
-            <i class="fa-solid fa-rotate"></i> Synchroniser
-        </button>
-        <form class="search-bar" method="GET" action="/posts" style="display:flex; gap:8px;">
-            <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Rechercher un post...">
-            <button type="submit" class="btn btn-primary btn-sm"><i class="fa-solid fa-magnifying-glass"></i></button>
-            @if($search)
-                <a href="/posts" class="btn btn-secondary btn-sm">Effacer</a>
-            @endif
-        </form>
+@section('main')
+@include('posts._list')
+
+<main class="content">
+    <div class="top-bar">
+        <div class="top-bar__title">
+            <i class="fa-solid fa-newspaper" style="color:var(--bleu-france);"></i>
+            Publications
+            <span class="breadcrumb">· {{ $posts->total() }} au total</span>
+        </div>
+        <div class="top-bar__actions">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="triggerImport('facebook')">
+                <i class="fa-solid fa-rotate"></i> Synchroniser
+            </button>
+        </div>
     </div>
-</div>
+
+    <div class="empty-state" style="flex:1;">
+        <div class="empty-state__icon"><i class="fa-regular fa-hand-pointer"></i></div>
+        <div class="empty-state__title">Sélectionnez une publication</div>
+        <div class="empty-state__text">Choisissez une publication dans la liste de gauche pour voir ses commentaires et répondre avec l'aide de l'IA.</div>
+    </div>
+</main>
 
 @include('partials.import-modal')
 @include('partials.freshness-indicator')
-
-@if($posts->count() > 0)
-    <div class="post-grid">
-        @foreach($posts as $post)
-        <a href="/posts/{{ $post->post_id }}" class="post-card" style="text-decoration:none; color:inherit;">
-            @if($post->image_url)
-                <img src="{{ $post->image_url }}" alt="Image du post" class="post-card-img" loading="lazy">
-            @else
-                <div class="post-card-img" style="display:flex; align-items:center; justify-content:center; font-family:'Outfit',sans-serif; font-size:24px; color:#999;">Pas d'image</div>
-            @endif
-            <div class="post-card-body">
-                <h3>Post #{{ Str::limit($post->post_id, 20) }}</h3>
-                <p>{{ $post->message_post ?? 'Aucun contenu' }}</p>
-            </div>
-            <div class="post-card-footer">
-                <span class="meta">{{ $post->temps_creer_post ?? '—' }}</span>
-                <span class="badge badge-count">{{ $post->commentaires_count }} com.</span>
-            </div>
-        </a>
-        @endforeach
-    </div>
-
-    <div class="pagination-wrapper">
-        {{ $posts->appends(['search' => $search])->links() }}
-    </div>
-@else
-    <div class="empty-state">
-        Aucune publication trouvee.
-    </div>
-@endif
 @endsection
