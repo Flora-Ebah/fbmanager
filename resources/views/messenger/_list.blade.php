@@ -1,12 +1,5 @@
 <aside class="list-col {{ isset($conversation) ? '' : 'is-visible-mobile' }}">
     <div class="list-col__head">
-        <div class="list-col__title-row">
-            <div class="list-col__title">
-                <i class="fa-brands fa-facebook-messenger" style="color:var(--bleu-france);"></i>
-                Conversations
-            </div>
-            <span class="list-col__count">{{ $conversations->total() }}</span>
-        </div>
         <form method="GET" action="/messenger" class="list-col__search">
             <i class="fa-solid fa-magnifying-glass"></i>
             <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Rechercher une conversation..." />

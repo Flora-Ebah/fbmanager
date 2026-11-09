@@ -1,12 +1,5 @@
 <aside class="list-col {{ isset($post) ? '' : 'is-visible-mobile' }}">
     <div class="list-col__head">
-        <div class="list-col__title-row">
-            <div class="list-col__title">
-                <i class="fa-solid fa-newspaper" style="color:var(--bleu-france);"></i>
-                Publications
-            </div>
-            <span class="list-col__count">{{ $posts->total() }}</span>
-        </div>
         <form method="GET" action="/posts" class="list-col__search">
             <i class="fa-solid fa-magnifying-glass"></i>
             <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Rechercher un post..." />
