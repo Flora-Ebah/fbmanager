@@ -203,42 +203,46 @@
             40%, 80% { transform: rotate(8deg); }
         }
 
-        /* Freshness pill in sidebar */
-        .sidebar-fresh {
-            margin: 10px 14px 0;
-            padding: 10px 12px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: var(--radius);
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.95);
-            display: flex;
+        /* Freshness pill in top-bar */
+        .fresh-pill {
+            display: inline-flex;
             align-items: center;
-            gap: 9px;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: var(--radius-full);
+            background: var(--vert-doux);
+            color: var(--vert-ok);
+            border: 1px solid #A7F3D0;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all var(--duration) var(--ease);
+            white-space: nowrap;
         }
-        .sidebar-fresh__dot {
-            width: 8px;
-            height: 8px;
+        .fresh-pill__dot {
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
-            background: #4ade80;
+            background: currentColor;
             flex-shrink: 0;
-            box-shadow: 0 0 6px rgba(74, 222, 128, 0.6);
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
         }
-        .sidebar-fresh.is-syncing .sidebar-fresh__dot {
-            background: #fbbf24;
+        .fresh-pill.is-syncing {
+            background: var(--jaune-doux);
+            color: var(--jaune-fonce);
+            border-color: #FDE68A;
+        }
+        .fresh-pill.is-syncing .fresh-pill__dot {
+            box-shadow: 0 0 0 3px rgba(180, 83, 9, 0.15);
             animation: pulse 1.2s infinite;
         }
-        .sidebar-fresh.is-stale .sidebar-fresh__dot { background: #f87171; }
-        .sidebar-fresh__content { flex: 1; min-width: 0; line-height: 1.3; }
-        .sidebar-fresh__title {
-            display: block;
-            font-size: 10px;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.6);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+        .fresh-pill.is-stale {
+            background: var(--rouge-doux);
+            color: #991B1B;
+            border-color: #FECACA;
         }
-        .sidebar-fresh__value { display: block; font-size: 12px; font-weight: 600; color: #fff; }
+        .fresh-pill.is-stale .fresh-pill__dot { box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15); }
+        .fresh-pill__text { font-weight: 500; }
+        .fresh-pill__text strong { font-weight: 600; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
         /* Sidebar footer : user card */
@@ -782,15 +786,6 @@
                 <i class="ph ph-bell"></i>
                 <span id="sidebar-new-items-text">Nouveautés</span>
             </button>
-
-            {{-- Freshness --}}
-            <div class="sidebar-fresh" id="sidebar-fresh" title="Dernière synchronisation automatique">
-                <span class="sidebar-fresh__dot"></span>
-                <div class="sidebar-fresh__content">
-                    <span class="sidebar-fresh__title">Synchronisé</span>
-                    <span class="sidebar-fresh__value" id="sidebar-fresh-label">à l'instant</span>
-                </div>
-            </div>
 
             <div class="icon-sidebar__footer">
                 <div class="icon-sidebar__avatar">

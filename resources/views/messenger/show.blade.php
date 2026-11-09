@@ -22,6 +22,10 @@
             </div>
         </div>
         <div class="top-bar__actions">
+            <div class="fresh-pill" id="fresh-pill">
+                <span class="fresh-pill__dot"></span>
+                <span class="fresh-pill__text" id="fresh-pill-text">Chargement...</span>
+            </div>
             <span class="badge {{ $conversation->statut === 'non_lu' ? 'badge-nonlu' : 'badge-lu' }}">
                 {{ $conversation->statut === 'non_lu' ? 'Non lu' : 'Lu' }}
             </span>

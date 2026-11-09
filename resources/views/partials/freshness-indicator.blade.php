@@ -1,4 +1,4 @@
-{{-- Indicateur synchronisation + notification de nouveautés, tout dans la sidebar --}}
+{{-- Pill de synchronisation (dans le top-bar) + notification nouveautés (dans la sidebar) --}}
 <script>
 (function() {
     const pageType = window.location.pathname.startsWith('/messenger') ? 'messenger' : 'facebook';
@@ -23,28 +23,25 @@
                 headers: { 'Accept': 'application/json' }
             });
             const data = await res.json();
-            const pill = document.getElementById('sidebar-fresh');
-            const label = document.getElementById('sidebar-fresh-label');
-            const title = pill ? pill.querySelector('.sidebar-fresh__title') : null;
-            if (!pill || !label) return;
 
-            pill.classList.remove('is-syncing', 'is-stale');
-
-            if (data.running) {
-                pill.classList.add('is-syncing');
-                if (title) title.textContent = 'Sync en cours';
-                label.textContent = 'Mise à jour...';
-            } else if (data.last_sync) {
-                const sec = Math.floor((Date.now() - new Date(data.last_sync.replace(' ', 'T')).getTime()) / 1000);
-                if (sec > 300) pill.classList.add('is-stale');
-                if (title) title.textContent = 'Dernière sync';
-                label.textContent = formatAgo(data.last_sync);
-            } else {
-                if (title) title.textContent = 'En attente';
-                label.textContent = 'Démarrage...';
+            // Pill dans le top-bar
+            const pill = document.getElementById('fresh-pill');
+            const pillText = document.getElementById('fresh-pill-text');
+            if (pill && pillText) {
+                pill.classList.remove('is-syncing', 'is-stale');
+                if (data.running) {
+                    pill.classList.add('is-syncing');
+                    pillText.innerHTML = '<strong>Synchronisation en cours</strong>';
+                } else if (data.last_sync) {
+                    const sec = Math.floor((Date.now() - new Date(data.last_sync.replace(' ', 'T')).getTime()) / 1000);
+                    if (sec > 300) pill.classList.add('is-stale');
+                    pillText.innerHTML = 'Mis à jour <strong>' + formatAgo(data.last_sync) + '</strong>';
+                } else {
+                    pillText.innerHTML = 'En attente...';
+                }
             }
 
-            // Nouveautés — bouton visible dans la sidebar
+            // Nouveautés dans la sidebar
             const newBtn = document.getElementById('sidebar-new-items');
             const newBtnText = document.getElementById('sidebar-new-items-text');
             if (newBtn && newBtnText) {

@@ -13,6 +13,10 @@
             <span class="breadcrumb">· {{ $commentaires->total() }} commentaire(s)</span>
         </div>
         <div class="top-bar__actions">
+            <div class="fresh-pill" id="fresh-pill">
+                <span class="fresh-pill__dot"></span>
+                <span class="fresh-pill__text" id="fresh-pill-text">Chargement...</span>
+            </div>
             @if($post->lien)
                 <a href="{{ $post->lien }}" target="_blank" class="btn btn-secondary btn-sm">
                     <i class="ph ph-arrow-up-right-from-square"></i> Voir sur Facebook
