@@ -635,7 +635,55 @@
             100% { background-position: -200% 0; }
         }
 
-        /* ─── PAGINATION ─── */
+        /* ─── PAGINATION COMPACTE (list column) ─── */
+        .list-col__pagination { margin-top: 10px; }
+        .pagination-compact {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            flex-wrap: nowrap;
+            overflow: hidden;
+            width: 100%;
+        }
+        .pagination-compact .pg-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--surface);
+            color: var(--text-secondary);
+            font-size: 10px;
+            text-decoration: none;
+            transition: all var(--duration) var(--ease);
+            flex-shrink: 0;
+        }
+        .pagination-compact .pg-btn:hover { background: var(--bleu-france-soft); color: var(--bleu-france); border-color: var(--bleu-france); }
+        .pagination-compact .pg-btn.is-disabled { opacity: 0.4; cursor: not-allowed; }
+        .pagination-compact .pg-info {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-primary);
+            padding: 0 4px;
+            flex-shrink: 0;
+        }
+        .pagination-compact .pg-info strong { color: var(--bleu-france); font-weight: 600; }
+        .pagination-compact .pg-sep { margin: 0 2px; color: var(--text-muted); }
+        .pagination-compact .pg-range {
+            font-size: 10.5px;
+            color: var(--text-muted);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+            margin-left: 4px;
+        }
+
+        /* ─── PAGINATION standard ─── */
         .pagination-wrapper {
             padding: 12px 16px;
             border-top: 1px solid var(--border);
