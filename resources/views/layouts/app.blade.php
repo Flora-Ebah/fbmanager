@@ -9,6 +9,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    {{-- Phosphor Icons (stroke moderne, similaire HugeIcons) --}}
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+    <style>
+        i[class^="ph"], i[class*=" ph"] { font-size: inherit; line-height: 1; vertical-align: -0.1em; }
+        .ph-spin { animation: ph-spin 1s linear infinite; }
+        @keyframes ph-spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+    </style>
     <style>
         :root {
             --bleu-france: #002395;
@@ -710,21 +717,21 @@
             <div class="icon-sidebar__section">Navigation</div>
             <nav class="icon-sidebar__nav">
                 <a href="/posts" class="icon-sidebar__item {{ request()->is('posts*') ? 'is-active' : '' }}">
-                    <i class="fa-solid fa-newspaper"></i> Publications
+                    <i class="ph ph-newspaper"></i> Publications
                 </a>
                 <a href="/messenger" class="icon-sidebar__item {{ request()->is('messenger*') ? 'is-active' : '' }}">
-                    <i class="fa-brands fa-facebook-messenger"></i> Messenger
+                    <i class="ph ph-messenger-logo"></i> Messenger
                 </a>
                 @if(auth()->user()->isAdmin())
                 <a href="/users" class="icon-sidebar__item {{ request()->is('users*') ? 'is-active' : '' }}">
-                    <i class="fa-solid fa-users"></i> Utilisateurs
+                    <i class="ph ph-users"></i> Utilisateurs
                 </a>
                 @endif
             </nav>
 
             {{-- Nouveau: notification nouveautés (si il y en a) --}}
             <button type="button" class="sidebar-new-items" id="sidebar-new-items" onclick="window.location.reload()">
-                <i class="fa-solid fa-bell"></i>
+                <i class="ph ph-bell"></i>
                 <span id="sidebar-new-items-text">Nouveautés</span>
             </button>
 
@@ -744,7 +751,7 @@
                 <div class="icon-sidebar__user" title="{{ auth()->user()->username }}">{{ auth()->user()->username }}</div>
                 <form action="/logout" method="POST" style="margin:0;">
                     @csrf
-                    <button type="submit" class="logout-btn" title="Déconnexion"><i class="fa-solid fa-right-from-bracket"></i></button>
+                    <button type="submit" class="logout-btn" title="Déconnexion"><i class="ph ph-sign-out"></i></button>
                 </form>
             </div>
         </aside>

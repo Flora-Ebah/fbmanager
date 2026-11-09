@@ -32,12 +32,12 @@
 
             if (data.running) {
                 pill.classList.add('is-syncing');
-                if (title) title.textContent = 'En cours';
-                label.textContent = 'Synchronisation...';
+                if (title) title.textContent = 'Sync en cours';
+                label.textContent = 'Mise à jour...';
             } else if (data.last_sync) {
                 const sec = Math.floor((Date.now() - new Date(data.last_sync.replace(' ', 'T')).getTime()) / 1000);
                 if (sec > 300) pill.classList.add('is-stale');
-                if (title) title.textContent = sec > 300 ? 'Désynchronisé' : 'Synchronisé';
+                if (title) title.textContent = 'Dernière sync';
                 label.textContent = formatAgo(data.last_sync);
             } else {
                 if (title) title.textContent = 'En attente';

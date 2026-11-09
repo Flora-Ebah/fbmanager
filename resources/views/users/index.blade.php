@@ -5,13 +5,13 @@
 <main class="content" style="width:100%;">
     <div class="top-bar">
         <div class="top-bar__title">
-            <i class="fa-solid fa-users" style="color:var(--bleu-france);"></i>
+            <i class="ph ph-users" style="color:var(--bleu-france);"></i>
             Utilisateurs
             <span class="breadcrumb">· {{ $users->total() }} au total</span>
         </div>
         <div class="top-bar__actions">
             <button type="button" class="btn btn-primary btn-sm" onclick="showForm('create')">
-                <i class="fa-solid fa-user-plus"></i> Nouvel utilisateur
+                <i class="ph ph-user-plus"></i> Nouvel utilisateur
             </button>
         </div>
     </div>
@@ -22,8 +22,8 @@
             {{-- ─── Formulaire (caché par defaut) ─── --}}
             <div id="user-form-card" class="card" style="display:none; margin-bottom:20px;">
                 <div class="card-header">
-                    <span id="form-title"><i class="fa-solid fa-user-plus"></i> Nouvel utilisateur</span>
-                    <button type="button" class="btn btn-ghost btn-icon btn-sm" onclick="hideForm()"><i class="fa-solid fa-xmark"></i></button>
+                    <span id="form-title"><i class="ph ph-user-plus"></i> Nouvel utilisateur</span>
+                    <button type="button" class="btn btn-ghost btn-icon btn-sm" onclick="hideForm()"><i class="ph ph-x"></i></button>
                 </div>
                 <div class="card-body">
                     <form method="POST" id="user-form" action="/users">
@@ -51,7 +51,7 @@
                             </div>
                         </div>
                         <div style="display:flex; gap:10px; margin-top:20px;">
-                            <button type="button" class="btn btn-primary" onclick="confirmSubmit()"><i class="fa-solid fa-check"></i> Enregistrer</button>
+                            <button type="button" class="btn btn-primary" onclick="confirmSubmit()"><i class="ph ph-check"></i> Enregistrer</button>
                             <button type="button" class="btn btn-secondary" onclick="hideForm()">Annuler</button>
                         </div>
                     </form>
@@ -98,9 +98,9 @@
                             </td>
                             <td>
                                 @if($u->is_active)
-                                    <span style="color:var(--vert-ok); font-weight:500;"><i class="fa-solid fa-circle-check"></i> Oui</span>
+                                    <span style="color:var(--vert-ok); font-weight:500;"><i class="ph ph-check-circle"></i> Oui</span>
                                 @else
-                                    <span style="color:var(--rouge-france); font-weight:500;"><i class="fa-solid fa-circle-xmark"></i> Non</span>
+                                    <span style="color:var(--rouge-france); font-weight:500;"><i class="ph ph-x-circle"></i> Non</span>
                                 @endif
                             </td>
                             <td style="color:var(--text-muted); font-size:13px;">
@@ -109,11 +109,11 @@
                             <td style="text-align:right;">
                                 <div style="display:flex; gap:6px; justify-content:flex-end;">
                                     <button type="button" class="btn btn-ghost btn-sm" onclick="showForm('edit', {{ $u->id }}, '{{ addslashes($u->username) }}', '{{ $u->email }}', '{{ $u->role }}')" title="Modifier">
-                                        <i class="fa-solid fa-pen"></i>
+                                        <i class="ph ph-pencil-simple"></i>
                                     </button>
                                     @if($u->username !== config('fbmanager.default_admin_username', 'admin'))
                                     <button type="button" class="btn btn-ghost btn-sm" onclick="confirmDelete({{ $u->id }}, '{{ addslashes($u->username) }}')" title="Supprimer" style="color:var(--rouge-france);">
-                                        <i class="fa-solid fa-trash"></i>
+                                        <i class="ph ph-trash"></i>
                                     </button>
                                     @endif
                                 </div>
@@ -139,7 +139,7 @@
 <div id="confirm-dialog" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:999; align-items:center; justify-content:center;">
     <div style="background:#fff; border-radius:var(--radius-lg); padding:24px; max-width:420px; width:90%; box-shadow:var(--shadow-lg);">
         <h3 style="font-family:'Sora',sans-serif; font-size:17px; font-weight:600; margin-bottom:10px; display:flex; align-items:center; gap:10px;">
-            <i class="fa-solid fa-triangle-exclamation" style="color:var(--rouge-france);"></i>
+            <i class="ph ph-warning" style="color:var(--rouge-france);"></i>
             <span id="confirm-title"></span>
         </h3>
         <p id="confirm-message" style="font-size:14px; color:var(--text-secondary); margin-bottom:20px;"></p>
@@ -160,7 +160,7 @@
         var method = document.getElementById('form-method');
 
         if (mode === 'create') {
-            title.innerHTML = '<i class="fa-solid fa-user-plus"></i> Nouvel utilisateur';
+            title.innerHTML = '<i class="ph ph-user-plus"></i> Nouvel utilisateur';
             form.action = '/users';
             method.value = 'POST';
             document.getElementById('f-username').value = '';
@@ -171,7 +171,7 @@
             document.getElementById('f-role').value = 'user';
             currentEditId = null;
         } else {
-            title.innerHTML = '<i class="fa-solid fa-user-pen"></i> Modifier : ' + username;
+            title.innerHTML = '<i class="ph ph-user"></i> Modifier : ' + username;
             form.action = '/users/' + id;
             method.value = 'PUT';
             document.getElementById('f-username').value = username;

@@ -253,15 +253,15 @@
 
             <div class="brand-features">
                 <div class="brand-feature">
-                    <i class="fa-brands fa-facebook"></i>
+                    <i class="ph ph-facebook-logo"></i>
                     <span>Suivi en temps réel de vos publications</span>
                 </div>
                 <div class="brand-feature">
-                    <i class="fa-solid fa-comments"></i>
+                    <i class="ph ph-chat-circles"></i>
                     <span>Gestion centralisée des commentaires</span>
                 </div>
                 <div class="brand-feature">
-                    <i class="fa-solid fa-robot"></i>
+                    <i class="ph ph-robot"></i>
                     <span>Réponses suggérées par l'IA</span>
                 </div>
             </div>
@@ -281,7 +281,7 @@
                     <div class="form-group">
                         <label for="email">Adresse e-mail</label>
                         <div class="input-wrapper">
-                            <i class="fa-solid fa-envelope"></i>
+                            <i class="ph ph-envelope"></i>
                             <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus placeholder="votre@email.com">
                         </div>
                         @error('email') <div class="form-error">{{ $message }}</div> @enderror
@@ -290,7 +290,7 @@
                     <div class="form-group">
                         <label for="password">Mot de passe</label>
                         <div class="input-wrapper">
-                            <i class="fa-solid fa-lock"></i>
+                            <i class="ph ph-lock"></i>
                             <input type="password" id="password" name="password" required placeholder="••••••••">
                         </div>
                         @error('password') <div class="form-error">{{ $message }}</div> @enderror
@@ -298,7 +298,7 @@
 
                     <button type="submit" class="btn-login">
                         Se connecter
-                        <i class="fa-solid fa-arrow-right"></i>
+                        <i class="ph ph-arrow-right"></i>
                     </button>
                 </form>
 

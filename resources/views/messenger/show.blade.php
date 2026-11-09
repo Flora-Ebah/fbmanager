@@ -14,7 +14,7 @@
     {{-- ─── Header conversation ─── --}}
     <div class="top-bar">
         <div class="top-bar__title">
-            <a href="/messenger" class="btn btn-ghost btn-icon btn-sm" style="margin-right:4px;"><i class="fa-solid fa-arrow-left"></i></a>
+            <a href="/messenger" class="btn btn-ghost btn-icon btn-sm" style="margin-right:4px;"><i class="ph ph-arrow-left"></i></a>
             <div class="chat-header-avatar" style="background:{{ $color }}">{{ $initials }}</div>
             <div>
                 <div style="font-family:'Sora',sans-serif; font-weight:600; font-size:15px;">{{ $conversation->nom_expediteur ?? 'Utilisateur Facebook' }}</div>
@@ -33,10 +33,10 @@
         @if($hasMore)
             <div class="chat-load-more" id="load-more-trigger">
                 <button id="load-more-btn" class="btn btn-secondary btn-sm">
-                    <i class="fa-solid fa-arrow-up"></i> Charger les messages plus anciens
+                    <i class="ph ph-arrow-up"></i> Charger les messages plus anciens
                 </button>
                 <div id="loading-spinner" style="display:none; padding:10px; color:var(--text-muted);">
-                    <i class="fa-solid fa-spinner fa-spin"></i> Chargement...
+                    <i class="ph ph-spinner ph-spin"></i> Chargement...
                 </div>
             </div>
         @endif
@@ -48,7 +48,7 @@
                 @endforeach
             @else
                 <div class="chat-empty">
-                    <i class="fa-regular fa-comment-dots"></i>
+                    <i class="ph ph-chat-circle-dots"></i>
                     <p>Aucun message dans cette conversation.</p>
                 </div>
             @endif
@@ -59,26 +59,26 @@
     <div class="chat-ai-bar">
         <div class="ai-actions-row">
             <button type="button" class="btn-ai" onclick="suggestAi('professional')">
-                <i class="fa-solid fa-robot"></i> Pro
+                <i class="ph ph-robot"></i> Pro
             </button>
             <button type="button" class="btn-ai" onclick="suggestAi('friendly')">
-                <i class="fa-solid fa-face-smile"></i> Amical
+                <i class="ph ph-smiley"></i> Amical
             </button>
             <button type="button" class="btn-ai" onclick="suggestAi('casual')">
-                <i class="fa-solid fa-comment"></i> Décontracté
+                <i class="ph ph-chat-circle"></i> Décontracté
             </button>
         </div>
         <div id="ai-result" class="ai-result" style="display:none;">
             <div class="ai-result-head">
-                <span><i class="fa-solid fa-robot"></i> Suggestion <span id="ai-tone-label" class="badge badge-user" style="margin-left:4px;"></span></span>
+                <span><i class="ph ph-robot"></i> Suggestion <span id="ai-tone-label" class="badge badge-user" style="margin-left:4px;"></span></span>
                 <button type="button" class="btn btn-ghost btn-sm" onclick="copyAiReply()" title="Copier">
-                    <i class="fa-solid fa-copy"></i>
+                    <i class="ph ph-copy"></i>
                 </button>
             </div>
             <div id="ai-reply-text" class="ai-result-text"></div>
         </div>
         <div id="ai-loading" class="ai-result-loading" style="display:none;">
-            <i class="fa-solid fa-spinner fa-spin"></i> Génération en cours...
+            <i class="ph ph-spinner ph-spin"></i> Génération en cours...
         </div>
         <div id="ai-error" class="ai-result-error" style="display:none;"></div>
     </div>

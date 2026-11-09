@@ -2,9 +2,9 @@
 <nav style="display:flex; align-items:center; justify-content:center; gap:6px; padding:20px 0; flex-wrap:wrap;">
     {{-- Previous --}}
     @if ($paginator->onFirstPage())
-        <span class="pg-btn pg-disabled"><i class="fa-solid fa-chevron-left"></i></span>
+        <span class="pg-btn pg-disabled"><i class="ph ph-caret-left"></i></span>
     @else
-        <a href="{{ $paginator->previousPageUrl() }}" class="pg-btn"><i class="fa-solid fa-chevron-left"></i></a>
+        <a href="{{ $paginator->previousPageUrl() }}" class="pg-btn"><i class="ph ph-caret-left"></i></a>
     @endif
 
     {{-- Pages --}}
@@ -26,9 +26,9 @@
 
     {{-- Next --}}
     @if ($paginator->hasMorePages())
-        <a href="{{ $paginator->nextPageUrl() }}" class="pg-btn"><i class="fa-solid fa-chevron-right"></i></a>
+        <a href="{{ $paginator->nextPageUrl() }}" class="pg-btn"><i class="ph ph-caret-right"></i></a>
     @else
-        <span class="pg-btn pg-disabled"><i class="fa-solid fa-chevron-right"></i></span>
+        <span class="pg-btn pg-disabled"><i class="ph ph-caret-right"></i></span>
     @endif
 
     <span style="margin-left:12px; font-family:'Outfit',sans-serif; font-size:16px; color:#888;">

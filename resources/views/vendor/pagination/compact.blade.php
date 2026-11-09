@@ -2,9 +2,9 @@
 <nav class="pagination-compact">
     {{-- Previous --}}
     @if ($paginator->onFirstPage())
-        <span class="pg-btn is-disabled"><i class="fa-solid fa-chevron-left"></i></span>
+        <span class="pg-btn is-disabled"><i class="ph ph-caret-left"></i></span>
     @else
-        <a href="{{ $paginator->previousPageUrl() }}" class="pg-btn" rel="prev" aria-label="Précédent"><i class="fa-solid fa-chevron-left"></i></a>
+        <a href="{{ $paginator->previousPageUrl() }}" class="pg-btn" rel="prev" aria-label="Précédent"><i class="ph ph-caret-left"></i></a>
     @endif
 
     {{-- Current / Total --}}
@@ -14,9 +14,9 @@
 
     {{-- Next --}}
     @if ($paginator->hasMorePages())
-        <a href="{{ $paginator->nextPageUrl() }}" class="pg-btn" rel="next" aria-label="Suivant"><i class="fa-solid fa-chevron-right"></i></a>
+        <a href="{{ $paginator->nextPageUrl() }}" class="pg-btn" rel="next" aria-label="Suivant"><i class="ph ph-caret-right"></i></a>
     @else
-        <span class="pg-btn is-disabled"><i class="fa-solid fa-chevron-right"></i></span>
+        <span class="pg-btn is-disabled"><i class="ph ph-caret-right"></i></span>
     @endif
 
     <span class="pg-range">· {{ $paginator->firstItem() }}–{{ $paginator->lastItem() }} sur {{ $paginator->total() }}</span>

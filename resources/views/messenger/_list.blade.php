@@ -1,7 +1,7 @@
 <aside class="list-col {{ isset($conversation) ? '' : 'is-visible-mobile' }}">
     <div class="list-col__head">
         <form method="GET" action="/messenger" class="list-col__search">
-            <i class="fa-solid fa-magnifying-glass"></i>
+            <i class="ph ph-magnifying-glass"></i>
             <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Rechercher une conversation..." />
         </form>
         @if($conversations->hasPages())
@@ -37,7 +37,7 @@
         </a>
         @empty
         <div class="empty-state" style="padding:40px 20px;">
-            <div class="empty-state__icon"><i class="fa-regular fa-comment-dots"></i></div>
+            <div class="empty-state__icon"><i class="ph ph-chat-circle-dots"></i></div>
             <div class="empty-state__title">Aucune conversation</div>
         </div>
         @endforelse

@@ -2,7 +2,7 @@
     <div style="background:#fff; border-radius:14px; padding:28px; max-width:480px; width:90%; box-shadow:0 20px 50px rgba(0,0,0,0.25);">
         <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px;">
             <div id="import-modal-icon" style="width:42px; height:42px; border-radius:50%; background:linear-gradient(135deg, var(--bleu-france), #0041d6); color:#fff; display:flex; align-items:center; justify-content:center; font-size:18px;">
-                <i class="fa-solid fa-rotate fa-spin"></i>
+                <i class="ph ph-arrows-clockwise fa-spin"></i>
             </div>
             <div style="flex:1;">
                 <div id="import-modal-title" style="font-size:17px; font-weight:600; color:var(--gris-fonce);">Synchronisation en cours</div>
@@ -51,7 +51,7 @@ async function triggerImport(type) {
     const btn = document.getElementById('btn-import-' + (type === 'facebook' ? 'fb' : 'msg'));
     const oldHtml = btn.innerHTML;
     btn.disabled = true;
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Lancement...';
+    btn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Lancement...';
 
     // Reset modal
     document.getElementById('import-modal-title').textContent =
@@ -64,7 +64,7 @@ async function triggerImport(type) {
     document.getElementById('stat-details').textContent = '—';
     document.getElementById('stat-errors').textContent = '0';
     document.getElementById('import-modal-close').style.display = 'none';
-    document.getElementById('import-modal-icon').innerHTML = '<i class="fa-solid fa-rotate fa-spin"></i>';
+    document.getElementById('import-modal-icon').innerHTML = '<i class="ph ph-arrows-clockwise fa-spin"></i>';
     document.getElementById('import-modal').style.display = 'flex';
 
     try {
@@ -79,7 +79,7 @@ async function triggerImport(type) {
         startPolling(type);
     } catch (e) {
         document.getElementById('import-modal-subtitle').textContent = 'Erreur : ' + e.message;
-        document.getElementById('import-modal-icon').innerHTML = '<i class="fa-solid fa-xmark"></i>';
+        document.getElementById('import-modal-icon').innerHTML = '<i class="ph ph-x"></i>';
         document.getElementById('import-modal-close').style.display = 'inline-flex';
     } finally {
         btn.innerHTML = oldHtml;
@@ -122,7 +122,7 @@ async function pollStatus(type) {
                 clearInterval(importPollTimer);
                 importPollTimer = null;
                 importFinished = true;
-                document.getElementById('import-modal-icon').innerHTML = '<i class="fa-solid fa-check"></i>';
+                document.getElementById('import-modal-icon').innerHTML = '<i class="ph ph-check"></i>';
                 document.getElementById('import-modal-icon').style.background = 'linear-gradient(135deg, #10B981, #059669)';
                 document.getElementById('import-modal-subtitle').textContent = 'Import terminé ! La page va se rafraîchir...';
                 document.getElementById('import-modal-close').style.display = 'inline-flex';

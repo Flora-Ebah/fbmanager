@@ -1,7 +1,7 @@
 <aside class="list-col {{ isset($post) ? '' : 'is-visible-mobile' }}">
     <div class="list-col__head">
         <form method="GET" action="/posts" class="list-col__search">
-            <i class="fa-solid fa-magnifying-glass"></i>
+            <i class="ph ph-magnifying-glass"></i>
             <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Rechercher un post..." />
         </form>
         @if($posts->hasPages())
@@ -20,23 +20,23 @@
         @endphp
         <a href="/posts/{{ $p->post_id }}" class="post-item {{ $isActive ? 'is-active' : '' }}">
             @if($p->image_url)
-                <img src="{{ $p->image_url }}" class="post-item__thumb" loading="lazy" onerror="this.outerHTML='<div class=\'post-item__thumb post-item__thumb--placeholder\'><i class=\'fa-regular fa-image\'></i></div>'" />
+                <img src="{{ $p->image_url }}" class="post-item__thumb" loading="lazy" onerror="this.outerHTML='<div class=\'post-item__thumb post-item__thumb--placeholder\'><i class=\'ph ph-image\'></i></div>'" />
             @else
-                <div class="post-item__thumb post-item__thumb--placeholder"><i class="fa-regular fa-image"></i></div>
+                <div class="post-item__thumb post-item__thumb--placeholder"><i class="ph ph-image"></i></div>
             @endif
             <div class="post-item__content">
                 <div class="post-item__text">{{ \Illuminate\Support\Str::limit($p->message_post ?? 'Sans texte', 85) }}</div>
                 <div class="post-item__meta">
-                    <span><i class="fa-regular fa-clock"></i> {{ $timeAgo }}</span>
+                    <span><i class="ph ph-clock"></i> {{ $timeAgo }}</span>
                     @if($p->commentaires_count > 0)
-                        <span class="post-item__count"><i class="fa-regular fa-comment"></i> {{ $p->commentaires_count }}</span>
+                        <span class="post-item__count"><i class="ph ph-chat-circle"></i> {{ $p->commentaires_count }}</span>
                     @endif
                 </div>
             </div>
         </a>
         @empty
         <div class="empty-state" style="padding:40px 20px;">
-            <div class="empty-state__icon"><i class="fa-regular fa-folder-open"></i></div>
+            <div class="empty-state__icon"><i class="ph ph-folder-open"></i></div>
             <div class="empty-state__title">Aucun post</div>
             <div class="empty-state__text">Rien trouvé avec cette recherche.</div>
         </div>
@@ -56,7 +56,13 @@
     white-space: nowrap;
     flex-wrap: nowrap;
     overflow: hidden;
+    width: 100%;
+    background: var(--surface-subtle);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 6px 10px;
 }
+.pagination-compact .pg-range { margin-left: auto; }
 .pagination-compact .pg-btn {
     display: inline-flex;
     align-items: center;
