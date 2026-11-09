@@ -6,7 +6,7 @@
         </form>
         @if($conversations->hasPages())
         <div class="list-col__pagination">
-            {{ $conversations->appends(['search' => $search])->onEachSide(1)->links() }}
+            {{ $conversations->appends(['search' => $search])->links('vendor.pagination.compact') }}
         </div>
         @endif
     </div>
@@ -46,26 +46,7 @@
 </aside>
 
 <style>
-.list-col__pagination {
-    margin-top: 12px;
-    display: flex;
-    justify-content: center;
-}
-.list-col__pagination nav { width: 100%; }
-.list-col__pagination .pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2px;
-    font-size: 12px;
-    flex-wrap: wrap;
-}
-.list-col__pagination .pagination a,
-.list-col__pagination .pagination span {
-    padding: 4px 8px;
-    min-width: 26px;
-    font-size: 12px;
-}
+.list-col__pagination { margin-top: 10px; }
 .convo-item {
     display: flex;
     gap: 12px;
