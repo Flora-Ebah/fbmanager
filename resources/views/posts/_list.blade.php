@@ -11,14 +11,17 @@
         @endif
     </div>
 
-    <div class="list-col__body">
+    <div class="list-col__body" id="post-list" data-live-updates="posts">
         @forelse($posts as $p)
         @php
             $isActive = isset($post) && $post->post_id === $p->post_id;
             try { $timeAgo = \Carbon\Carbon::parse($p->temps_creer_post)->diffForHumans(['short' => true]); }
             catch (\Throwable $e) { $timeAgo = '—'; }
         @endphp
-        <a href="/posts/{{ $p->post_id }}" class="post-item {{ $isActive ? 'is-active' : '' }}">
+        <a href="/posts/{{ $p->post_id }}" class="post-item {{ $isActive ? 'is-active' : '' }}"
+           data-post-id="{{ $p->post_id }}"
+           data-time-iso="{{ $p->temps_creer_post }}"
+           data-comments-count="{{ $p->commentaires_count }}">
             @if($p->image_url)
                 <img src="{{ $p->image_url }}" class="post-item__thumb" loading="lazy" onerror="this.outerHTML='<div class=\'post-item__thumb post-item__thumb--placeholder\'><i class=\'ph ph-image\'></i></div>'" />
             @else

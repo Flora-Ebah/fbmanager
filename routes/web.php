@@ -53,7 +53,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::middleware(['auth'])->group(function () {
     // Posts & Comments
     Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+    Route::get('/posts/live-list', [PostController::class, 'liveList'])->name('posts.live-list');
     Route::get('/posts/{postId}', [PostController::class, 'show'])->name('posts.show');
+    Route::get('/posts/{postId}/live-comments', [PostController::class, 'liveComments'])->name('posts.live-comments');
 
     // AI - Generation de reponses
     Route::post('/ai/suggest-reply', [AiController::class, 'suggestReply'])->name('ai.suggest');
@@ -68,7 +70,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Messenger
     Route::get('/messenger', [MessengerController::class, 'index'])->name('messenger.index');
+    Route::get('/messenger/live-list', [MessengerController::class, 'liveList'])->name('messenger.live-list');
     Route::get('/messenger/{conversationId}', [MessengerController::class, 'show'])->name('messenger.show');
+    Route::get('/messenger/{conversationId}/live-messages', [MessengerController::class, 'liveMessages'])->name('messenger.live-messages');
 
     // Admin: Users management
     Route::middleware(\App\Http\Middleware\AdminMiddleware::class)->group(function () {

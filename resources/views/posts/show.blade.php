@@ -409,4 +409,5 @@
 </script>
 
 @include('partials.freshness-indicator')
+@include('partials.live-updates')
 @endsection

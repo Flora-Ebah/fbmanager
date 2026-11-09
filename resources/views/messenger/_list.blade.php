@@ -11,7 +11,7 @@
         @endif
     </div>
 
-    <div class="list-col__body">
+    <div class="list-col__body" id="convo-list" data-live-updates="messenger">
         @forelse($conversations as $c)
         @php
             $isActive = isset($conversation) && $conversation->conversation_id === $c->conversation_id;
@@ -22,7 +22,9 @@
             catch (\Throwable $e) { $time = '—'; }
             $isUnread = $c->statut === 'non_lu';
         @endphp
-        <a href="/messenger/{{ $c->conversation_id }}" class="convo-item {{ $isActive ? 'is-active' : '' }} {{ $isUnread ? 'is-unread' : '' }}">
+        <a href="/messenger/{{ $c->conversation_id }}" class="convo-item {{ $isActive ? 'is-active' : '' }} {{ $isUnread ? 'is-unread' : '' }}"
+           data-conv-id="{{ $c->conversation_id }}"
+           data-time-iso="{{ $c->temps_dernier_message ?? $c->updated_at }}">
             <div class="convo-item__avatar" style="background:{{ $color }}">{{ $initials }}</div>
             <div class="convo-item__content">
                 <div class="convo-item__head">
