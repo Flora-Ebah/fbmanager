@@ -11,6 +11,11 @@
             <i class="fa-solid fa-magnifying-glass"></i>
             <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Rechercher une conversation..." />
         </form>
+        @if($conversations->hasPages())
+        <div class="list-col__pagination">
+            {{ $conversations->appends(['search' => $search])->onEachSide(1)->links() }}
+        </div>
+        @endif
     </div>
 
     <div class="list-col__body">
@@ -44,15 +49,30 @@
         </div>
         @endforelse
 
-        @if($conversations->hasPages())
-        <div class="pagination-wrapper" style="padding:12px;">
-            {{ $conversations->appends(['search' => $search])->onEachSide(1)->links() }}
-        </div>
-        @endif
     </div>
 </aside>
 
 <style>
+.list-col__pagination {
+    margin-top: 12px;
+    display: flex;
+    justify-content: center;
+}
+.list-col__pagination nav { width: 100%; }
+.list-col__pagination .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+    font-size: 12px;
+    flex-wrap: wrap;
+}
+.list-col__pagination .pagination a,
+.list-col__pagination .pagination span {
+    padding: 4px 8px;
+    min-width: 26px;
+    font-size: 12px;
+}
 .convo-item {
     display: flex;
     gap: 12px;

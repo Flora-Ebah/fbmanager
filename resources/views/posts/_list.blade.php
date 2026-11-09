@@ -11,6 +11,11 @@
             <i class="fa-solid fa-magnifying-glass"></i>
             <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Rechercher un post..." />
         </form>
+        @if($posts->hasPages())
+        <div class="list-col__pagination">
+            {{ $posts->appends(['search' => $search])->onEachSide(1)->links() }}
+        </div>
+        @endif
     </div>
 
     <div class="list-col__body">
@@ -44,15 +49,30 @@
         </div>
         @endforelse
 
-        @if($posts->hasPages())
-        <div class="pagination-wrapper" style="padding:12px;">
-            {{ $posts->appends(['search' => $search])->onEachSide(1)->links() }}
-        </div>
-        @endif
     </div>
 </aside>
 
 <style>
+.list-col__pagination {
+    margin-top: 12px;
+    display: flex;
+    justify-content: center;
+}
+.list-col__pagination nav { width: 100%; }
+.list-col__pagination .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+    font-size: 12px;
+    flex-wrap: wrap;
+}
+.list-col__pagination .pagination a,
+.list-col__pagination .pagination span {
+    padding: 4px 8px;
+    min-width: 26px;
+    font-size: 12px;
+}
 .post-item {
     display: flex;
     gap: 12px;

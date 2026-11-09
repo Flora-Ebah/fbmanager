@@ -43,7 +43,7 @@
             --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
             --shadow-lg: 0 10px 30px rgba(15, 23, 42, 0.12);
 
-            --sidebar-width: 72px;
+            --sidebar-width: 220px;
             --list-width: 340px;
 
             --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -84,20 +84,27 @@
             overflow: hidden;
         }
 
-        /* ─── ICON SIDEBAR (gauche, 72px) ─── */
+        /* ─── NAV SIDEBAR (gauche, 220px) ─── */
         .icon-sidebar {
             width: var(--sidebar-width);
             background: var(--bleu-france);
             display: flex;
             flex-direction: column;
-            align-items: center;
             padding: 16px 0;
             flex-shrink: 0;
             color: #fff;
         }
+        .icon-sidebar__brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 16px 20px;
+            text-decoration: none;
+            color: #fff;
+        }
         .icon-sidebar__logo {
-            width: 44px;
-            height: 44px;
+            width: 38px;
+            height: 38px;
             background: #fff;
             color: var(--bleu-france);
             border-radius: var(--radius);
@@ -106,30 +113,49 @@
             justify-content: center;
             font-family: 'Sora', sans-serif;
             font-weight: 700;
-            font-size: 18px;
-            margin-bottom: 20px;
+            font-size: 15px;
             box-shadow: var(--shadow);
+            flex-shrink: 0;
+        }
+        .icon-sidebar__brand-text {
+            font-family: 'Sora', sans-serif;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: -0.01em;
+        }
+        .icon-sidebar__section {
+            padding: 12px 20px 6px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: rgba(255, 255, 255, 0.5);
         }
         .icon-sidebar__nav {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 2px;
             flex: 1;
-            width: 100%;
             padding: 0 10px;
-            align-items: center;
+            overflow-y: auto;
         }
         .icon-sidebar__item {
-            width: 48px;
-            height: 48px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 12px;
+            padding: 10px 12px;
             border-radius: var(--radius);
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 20px;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 14px;
+            font-weight: 500;
             transition: all var(--duration) var(--ease);
             position: relative;
+        }
+        .icon-sidebar__item i {
+            font-size: 15px;
+            width: 18px;
+            text-align: center;
+            flex-shrink: 0;
         }
         .icon-sidebar__item:hover {
             background: rgba(255, 255, 255, 0.1);
@@ -138,35 +164,51 @@
         .icon-sidebar__item.is-active {
             background: #fff;
             color: var(--bleu-france);
+            font-weight: 600;
             box-shadow: var(--shadow-md);
         }
-        .icon-sidebar__item[data-tooltip]:hover::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            left: 100%;
-            margin-left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: var(--text-primary);
-            color: #fff;
-            padding: 6px 12px;
-            border-radius: var(--radius-sm);
-            font-size: 12px;
-            white-space: nowrap;
-            z-index: 1000;
-            font-weight: 500;
-            box-shadow: var(--shadow-md);
+
+        /* Freshness mini pill in sidebar */
+        .sidebar-fresh {
+            margin: 10px 14px 0;
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: var(--radius);
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
+        .sidebar-fresh__dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #4ade80;
+            flex-shrink: 0;
+            box-shadow: 0 0 6px rgba(74, 222, 128, 0.6);
+        }
+        .sidebar-fresh.is-syncing .sidebar-fresh__dot {
+            background: #fbbf24;
+            animation: pulse 1.2s infinite;
+        }
+        .sidebar-fresh.is-stale .sidebar-fresh__dot { background: #f87171; }
+        .sidebar-fresh__label { font-weight: 500; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        /* Sidebar footer : user card */
         .icon-sidebar__footer {
             margin-top: auto;
+            padding: 12px 14px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
             display: flex;
-            flex-direction: column;
-            gap: 8px;
             align-items: center;
+            gap: 10px;
         }
         .icon-sidebar__avatar {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: linear-gradient(135deg, #fff, #E8EBF5);
             color: var(--bleu-france);
@@ -174,19 +216,30 @@
             align-items: center;
             justify-content: center;
             font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+        .icon-sidebar__user {
+            flex: 1;
+            min-width: 0;
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         .logout-btn {
-            width: 44px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             border-radius: var(--radius-sm);
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 15px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all var(--duration) var(--ease);
+            flex-shrink: 0;
         }
         .logout-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
 
@@ -493,6 +546,51 @@
         }
         .card-body { padding: 20px; }
 
+        /* ─── SKELETONS ─── */
+        .skeleton {
+            background: linear-gradient(90deg, var(--surface-subtle) 0%, var(--surface-hover) 50%, var(--surface-subtle) 100%);
+            background-size: 200% 100%;
+            animation: skeleton-shimmer 1.4s ease-in-out infinite;
+            border-radius: var(--radius-sm);
+        }
+        @keyframes skeleton-shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .skeleton-row {
+            display: flex;
+            gap: 12px;
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border);
+            align-items: center;
+        }
+        .skeleton-thumb { width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0; }
+        .skeleton-thumb--square { border-radius: var(--radius); }
+        .skeleton-lines { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+        .skeleton-line { height: 12px; }
+        .skeleton-line--80 { width: 80%; }
+        .skeleton-line--60 { width: 60%; }
+        .skeleton-line--40 { width: 40%; }
+
+        /* Page loading overlay */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--bleu-france), transparent);
+            background-size: 200% 100%;
+            animation: page-loading 1s ease-in-out infinite;
+            z-index: 10001;
+            display: none;
+        }
+        .page-loader.is-visible { display: block; }
+        @keyframes page-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
         /* ─── PAGINATION ─── */
         .pagination-wrapper {
             padding: 12px 16px;
@@ -563,27 +661,41 @@
 </head>
 <body>
     @auth
+    <div class="page-loader" id="page-loader"></div>
     <div class="app">
-        {{-- ═══ ICON SIDEBAR ═══ --}}
+        {{-- ═══ NAV SIDEBAR ═══ --}}
         <aside class="icon-sidebar" id="icon-sidebar">
-            <a href="/posts" class="icon-sidebar__logo" title="FBManager">fb</a>
+            <a href="/posts" class="icon-sidebar__brand">
+                <div class="icon-sidebar__logo">fb</div>
+                <span class="icon-sidebar__brand-text">FBManager</span>
+            </a>
+
+            <div class="icon-sidebar__section">Navigation</div>
             <nav class="icon-sidebar__nav">
-                <a href="/posts" class="icon-sidebar__item {{ request()->is('posts*') ? 'is-active' : '' }}" data-tooltip="Publications">
-                    <i class="fa-solid fa-newspaper"></i>
+                <a href="/posts" class="icon-sidebar__item {{ request()->is('posts*') ? 'is-active' : '' }}">
+                    <i class="fa-solid fa-newspaper"></i> Publications
                 </a>
-                <a href="/messenger" class="icon-sidebar__item {{ request()->is('messenger*') ? 'is-active' : '' }}" data-tooltip="Messenger">
-                    <i class="fa-brands fa-facebook-messenger"></i>
+                <a href="/messenger" class="icon-sidebar__item {{ request()->is('messenger*') ? 'is-active' : '' }}">
+                    <i class="fa-brands fa-facebook-messenger"></i> Messenger
                 </a>
                 @if(auth()->user()->isAdmin())
-                <a href="/users" class="icon-sidebar__item {{ request()->is('users*') ? 'is-active' : '' }}" data-tooltip="Utilisateurs">
-                    <i class="fa-solid fa-users"></i>
+                <a href="/users" class="icon-sidebar__item {{ request()->is('users*') ? 'is-active' : '' }}">
+                    <i class="fa-solid fa-users"></i> Utilisateurs
                 </a>
                 @endif
             </nav>
+
+            {{-- Freshness pill --}}
+            <div class="sidebar-fresh" id="sidebar-fresh" title="Dernière synchronisation">
+                <span class="sidebar-fresh__dot"></span>
+                <span class="sidebar-fresh__label" id="sidebar-fresh-label">Synchronisé</span>
+            </div>
+
             <div class="icon-sidebar__footer">
-                <div class="icon-sidebar__avatar" data-tooltip="{{ auth()->user()->username }}" title="{{ auth()->user()->username }}">
+                <div class="icon-sidebar__avatar">
                     {{ strtoupper(substr(auth()->user()->username, 0, 2)) }}
                 </div>
+                <div class="icon-sidebar__user" title="{{ auth()->user()->username }}">{{ auth()->user()->username }}</div>
                 <form action="/logout" method="POST" style="margin:0;">
                     @csrf
                     <button type="submit" class="logout-btn" title="Déconnexion"><i class="fa-solid fa-right-from-bracket"></i></button>
@@ -629,6 +741,22 @@
                 setTimeout(() => t.remove(), 300);
             });
         }, 4000);
+
+        // Page loader on internal navigation
+        (function() {
+            const loader = document.getElementById('page-loader');
+            if (!loader) return;
+            document.addEventListener('click', function(e) {
+                const link = e.target.closest('a');
+                if (!link) return;
+                const href = link.getAttribute('href');
+                if (!href || href.startsWith('#') || href.startsWith('javascript:') || link.target === '_blank') return;
+                if (link.hostname && link.hostname !== window.location.hostname) return;
+                loader.classList.add('is-visible');
+            });
+            window.addEventListener('beforeunload', () => loader.classList.add('is-visible'));
+            window.addEventListener('pageshow', () => loader.classList.remove('is-visible'));
+        })();
     </script>
     @endauth
 
