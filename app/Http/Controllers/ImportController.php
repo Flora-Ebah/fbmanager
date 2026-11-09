@@ -60,17 +60,6 @@ class ImportController extends Controller
         $finishedAt = Cache::get("{$type}_last_finished_at");
         $running = Cache::has("{$type}_running");
 
-        // Fallback: si pas de cache (cron ne le set pas), utiliser le dernier record en BDD
-        if (!$finishedAt) {
-            if ($type === 'facebook') {
-                $finishedAt = \App\Models\Commentaire::max('created_at')
-                    ?? \App\Models\Post::max('created_at');
-            } else {
-                $finishedAt = \App\Models\MessengerMessage::max('created_at')
-                    ?? \App\Models\MessengerConversation::max('updated_at');
-            }
-        }
-
         // Compter les nouveaux records depuis la derniere visite de l'utilisateur
         $since = request()->get('since');
         $newCount = 0;

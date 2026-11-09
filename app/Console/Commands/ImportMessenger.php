@@ -177,6 +177,9 @@ class ImportMessenger extends Command
             'finished' => true,
         ], 3600);
 
+        // Marquer la date de fin pour la pastille de freshness
+        Cache::put('messenger_last_finished_at', now()->toDateTimeString(), 86400);
+
         $bar->finish();
         $this->newLine(2);
 
