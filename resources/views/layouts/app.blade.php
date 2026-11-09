@@ -656,19 +656,18 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 24px;
-            height: 24px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            background: var(--surface);
-            color: var(--text-secondary);
-            font-size: 10px;
+            width: 22px;
+            height: 22px;
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            font-size: 11px;
             text-decoration: none;
-            transition: all var(--duration) var(--ease);
+            transition: color var(--duration) var(--ease);
             flex-shrink: 0;
         }
-        .pagination-compact .pg-btn:hover { background: var(--bleu-france-soft); color: var(--bleu-france); border-color: var(--bleu-france); }
-        .pagination-compact .pg-btn.is-disabled { opacity: 0.4; cursor: not-allowed; }
+        .pagination-compact .pg-btn:hover { color: var(--bleu-france); }
+        .pagination-compact .pg-btn.is-disabled { opacity: 0.3; cursor: not-allowed; }
         .pagination-compact .pg-info {
             font-size: 12px;
             font-weight: 500;
